@@ -1,14 +1,14 @@
 :root {
-    --primary: #18181B;
-    --primary-light: #F4F4F6;
-    --dark: #18181B;
-    --gray-500: #71717A;
-    --gray-800: #18181B;
-    --bg-color: #F4F4F6;
-    --border-color: rgba(255, 255, 255, 0.8);
+    --primary: #1A110A; 
+    --primary-light: #D5B99F;
+    --dark: #1A110A;
+    --gray-500: #5C4A3D; 
+    --gray-800: #2C1E16; 
+    --bg-color: #D5B99F;
+    --border-color: rgba(26, 17, 10, 0.1);
     --white: #ffffff;
-    --danger: #18181B;
-    --black-deep: #09090B;
+    --danger: #1A110A; 
+    --black-deep: #000000;
 }
 
 * {
@@ -27,156 +27,214 @@ html,
 body {
     padding: 0;
     margin: 0;
-    background: radial-gradient(ellipse at top, #EAE5DE, #D8D2C7);
+    background-color: var(--primary-light);
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
 }
 
-body {
+.app-container {
     max-width: 480px;
     margin: 0 auto;
     background-color: transparent;
     position: relative;
     padding: 24px;
     padding-bottom: 120px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.03);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-h1 {
-    font-size: 28px;
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.main-content > h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
     font-weight: 800;
-    color: var(--gray-800);
-    margin: 0 0 4px 0;
-    letter-spacing: -0.03em;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
     text-transform: capitalize;
+    text-align: center;
+    color: var(--dark);
 }
 
-p {
-    font-size: 13px;
+.main-content > p {
+    font-size: 14px;
     font-weight: 500;
     color: var(--gray-500);
-    margin: 0 0 24px 0;
+    margin: 0 0 32px 0;
     letter-spacing: -0.01em;
+    text-align: center;
+}
+
+search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+    width: 100%;
+}
+
+search input {
+    width: 100%;
+    max-width: 500px;
+    padding: 14px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    color: var(--gray-800);
+    outline: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(26, 17, 10, 0.05);
+}
+
+search input:focus {
+    background-color: var(--white);
+    border-color: var(--gray-500);
+}
+
+.category-filter {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.2s ease;
+}
+
+.filter-item:hover {
+    color: var(--dark);
+}
+
+.filter-item.active {
+    color: var(--dark);
+    font-weight: 700;
+}
+
+.filter-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--dark);
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.carousel-nav {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid var(--dark);
+    color: var(--dark);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.carousel-nav:hover {
+    background-color: var(--dark);
+    color: var(--primary-light);
 }
 
 .card-menu {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex: 1;
 }
 
-.card {
+.card-premium {
+    width: 100%;
+    max-width: 280px;
     display: flex;
     flex-direction: column;
-    background-color: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(27, 24, 20, 0.04), 0 12px 24px -4px rgba(27, 24, 20, 0.08);
-    position: relative;
-    padding-bottom: 50px;
-    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-    cursor: pointer;
 }
 
-.card:active {
-    transform: scale(0.985);
+.card-frame-header {
+    background-color: var(--dark);
+    padding: 24px 16px 0 16px;
 }
 
-.image-container {
+.card-image-wrapper {
     width: 100%;
     aspect-ratio: 1 / 1;
-    position: relative;
     background-color: var(--border-color);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-.image-container img {
+.card-image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-
-.badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: var(--danger);
-    color: var(--white);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 20px;
-    z-index: 10;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-
-
-.card .item-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--gray-800);
-    margin: 12px 12px 4px 12px;
-    letter-spacing: -0.015em;
-}
-
-
-.card .deskripsi {
-    display: block;
-    font-size: 12px;
-    font-weight: 400;
-    color: var(--gray-500);
-    margin: 0;
-    padding: 0 12px 8px 12px;
-    line-height: 1.4;
-    letter-spacing: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Nominal Harga */
-.card .harga-cart {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--black-deep);
-    display: block;
-    padding: 0 12px 12px 12px;
-    letter-spacing: -0.02em;
-}
-
-
-.card .tambah {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--primary-light);
-    color: var(--gray-800);
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0;
-    cursor: pointer;
+.card-body {
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(26,17,10,0.1);
+    border-top: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    line-height: 0;
-    transition: transform 0.15s ease-out;
+    padding: 24px 16px;
 }
 
-.card .tambah:hover {
-    transform: scale(1.1);
+.item-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 24px 0;
+    text-align: center;
 }
 
-.card .tambah:active {
-    transform: scale(0.9);
+.btn-order {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    border: 1px solid rgba(26, 17, 10, 0.3);
+    color: var(--dark);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-order:hover {
+    background-color: var(--dark);
+    color: var(--primary-light);
 }
 
 #cart-ringkasan {
@@ -191,9 +249,7 @@ p {
 }
 
 .cart-ringkasan.hidden {
-    opacity: 0;
-    transform: translate(-50%, 20px);
-    pointer-events: none;
+    display: none !important;
 }
 
 .cart-info {
@@ -204,7 +260,7 @@ p {
     background-color: var(--dark);
     border-radius: 50px;
     padding: 14px 24px;
-    box-shadow: 0 10px 25px -5px rgba(31, 41, 55, 0.4);
+    box-shadow: 0 10px 25px -5px rgba(26, 17, 10, 0.4);
     cursor: pointer;
     transition: transform 0.15s ease-out;
 }
@@ -215,9 +271,8 @@ p {
 
 .cart-info>span,
 .cart-info>strong {
-    color: var(--white);
+    color: var(--primary-light);
 }
-
 
 #count {
     font-size: 13px;
@@ -248,11 +303,112 @@ p {
 .icon-cart {
     width: 20px;
     height: 20px;
+    filter: invert(0.8) sepia(0.2) saturate(0.5);
 }
 
 .arrow {
-    color: var(--white);
+    color: var(--primary-light);
     font-size: 13px;
     font-weight: 700;
-    letter-spacing: -0.01em;
+}
+
+@media screen and (max-width: 767px) {
+    .carousel-nav {
+        display: none;
+    }
+    .card-premium {
+        max-width: 100%;
+    }
+    .card-menu {
+        flex-direction: column;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .app-container {
+        max-width: 768px;
+    }
+    .card-premium {
+        max-width: calc(33.333% - 16px);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .app-container {
+        max-width: 100%;
+        padding-left: 48px;
+        padding-right: 48px;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+
+    search input {
+        max-width: 700px;
+    }
+    
+    .main-content {
+        flex: 1;
+        max-width: 1200px;
+    }
+
+    .card-premium {
+        max-width: calc(33.333% - 16px);
+    }
+
+    #cart-ringkasan {
+        position: sticky;
+        top: 24px;
+        transform: none;
+        left: auto;
+        bottom: auto;
+        width: 320px;
+        flex-shrink: 0;
+        max-width: none;
+    }
+
+    .cart-info {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 24px;
+        padding: 24px;
+        gap: 8px;
+    }
+    
+    .cart-info > .pipe {
+        display: none;
+    }
+
+    .cart-info > #count {
+        font-size: 14px;
+        color: rgba(255,255,255,0.6);
+    }
+
+    .cart-info > #total {
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .aksi {
+        width: 100%;
+        justify-content: center;
+        background-color: var(--primary-light);
+        padding: 14px;
+        border-radius: 100px;
+        transition: transform 0.15s ease;
+    }
+
+    .aksi:hover {
+        transform: scale(1.02);
+    }
+    
+    .aksi > .arrow {
+        color: var(--dark);
+    }
+
+    .aksi > .icon-cart {
+        filter: invert(1);
+    }
 }
