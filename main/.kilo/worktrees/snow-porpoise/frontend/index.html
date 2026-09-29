@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tugas pemrograman web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<!-- test -->
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <h1>menu</h1>
+            <p>pesan langsung dari meja kamu</p>
+            <search>
+                <input type="text" placeholder="Cari makanan, minuman, atau snack">
+            </search>
+            
+            <div class="category-filter">
+                <span class="filter-item active">All</span>
+                <span class="filter-item">Makanan</span>
+                <span class="filter-item">Minuman</span>
+                <span class="filter-item">Snack</span>
+            </div>
+
+            <div class="carousel-container">
+                <button class="carousel-nav prev-nav">←</button>
+                
+                <div class="card-menu">
+                    <div class="card-premium">
+                        <div class="card-frame-header">
+                            <div class="card-image-wrapper">
+                                <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80" alt="Kopi Cappuccino">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="item-title">Cappuccino</h3>
+                            <button class="btn-order">Order Now</button>
+                        </div>
+                    </div>
+
+                    <div class="card-premium">
+                        <div class="card-frame-header">
+                            <div class="card-image-wrapper">
+                                <img src="https://images.unsplash.com/photo-1551030173-122aabc4489c?w=500&q=80" alt="Kopi Americano">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="item-title">Americano</h3>
+                            <button class="btn-order">Order Now</button>
+                        </div>
+                    </div>
+
+                    <div class="card-premium">
+                        <div class="card-frame-header">
+                            <div class="card-image-wrapper">
+                                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=500&q=80" alt="Kopi Espresso">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="item-title">Espresso</h3>
+                            <button class="btn-order">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-nav next-nav">→</button>
+            </div>
+        </div>
+
+    <div id="cart-ringkasan" class="cart-ringkasan hidden">
+
+        <div class="cart-info">
+            <span id="count">1 Item</span>
+            <span class="pipe">|</span>
+            <strong id="total">Rp 18.000</strong>
+        </div>
+
+        <div class="aksi">
+            <img src="asset/cart.svg" alt="cart" class="icon-cart">
+            <span class="arrow">➜</span>
+        </div>
+
+    </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
