@@ -1,9 +1,10 @@
 const tambah = document.getElementById('tambah');
 const cartRingkasan = document.getElementById('cart-ringkasan');
+const makananBtn = document.getElementById('makanan-btn');
 
-tambah.addEventListener('click', () => {
-    cartRingkasan.classList.remove('hidden');
-    
-})
+makananBtn.addEventListener('click', () => {
+    window.location.href = 'makanan.html';
+});
+
 
 
