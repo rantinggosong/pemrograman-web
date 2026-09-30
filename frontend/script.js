@@ -11,10 +11,13 @@ const dataMenu = [
 
 let lacakUser = false;
 let kategoriAktif = "All";
+let kataKunci = "";
 
 const menuContainer = document.getElementById("menu-container");
 const tombolNavigasi = document.getElementById("navigasi");
 const tombolKategori = document.querySelectorAll('#filter-container button');
+const inputPencarian = document.getElementById("input-pencarian");
+const inputKosong = document.getElementById("empty-state");
 
 function renderMenu() {
     let batasAwal = window.innerWidth >= 1024 ? 6 : 4;
@@ -26,13 +29,16 @@ function renderMenu() {
         dataSaringan = dataMenu.filter(item => item.kategori === kategoriAktif);
     }
 
+    if (kataKunci !== "") {
+        dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
+    }
+
     let dataTampil;
     if (lacakUser === true) {
         dataTampil = dataSaringan;
     } else {
         dataTampil = dataSaringan.slice(0, batasAwal);
     }
-
 
     menuContainer.innerHTML = '';
 
@@ -55,14 +61,21 @@ function renderMenu() {
         menuContainer.insertAdjacentHTML('beforeend', kartuMenu);
     });
 
-    if (dataSaringan.length <= batasAwal) {
+    if (dataSaringan.length === 0) {
+        menuContainer.classList.add('hidden');
+        inputKosong.classList.remove('hidden');
+        inputKosong.classList.add('flex');
         tombolNavigasi.style.display = 'none';
     } else {
-        tombolNavigasi.style.display = 'block';
-        if (lacakUser === true) {
-            tombolNavigasi.textContent = "Tutup Kembali";
+        menuContainer.classList.remove('hidden');
+        inputKosong.classList.remove('flex');
+        inputKosong.classList.add('hidden');
+
+        if (dataSaringan.length <= batasAwal) {
+            tombolNavigasi.style.display = 'none';
         } else {
-            tombolNavigasi.textContent = "Lihat Lebih Banyak";
+            tombolNavigasi.style.display = 'block';
+            tombolNavigasi.textContent = lacakUser ? "Tutup Kembali" : "Lihat Lebih Banyak";
         }
     }
 }
@@ -89,6 +102,23 @@ tombolKategori.forEach(tombol => {
 tombolNavigasi.addEventListener('click', () => {
     lacakUser = !lacakUser;
     renderMenu();
+});
+
+inputPencarian.addEventListener('keyup', (e) => {
+    e.preventDefault();
+    if (e.key === 'Enter') {
+        kataKunci = e.target.value.trim();
+        lacakUser = false;
+        renderMenu();
+    }
+});
+
+inputPencarian.addEventListener('input', (e) => {
+    if (e.target.value.trim() === "") {
+        kataKunci = "";
+        lacakUser = false;
+        renderMenu();
+    }
 });
 
 window.addEventListener('resize', () => {
