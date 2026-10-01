@@ -75,7 +75,7 @@ function renderMenu() {
             tombolNavigasi.style.display = 'none';
         } else {
             tombolNavigasi.style.display = 'block';
-            tombolNavigasi.textContent = lacakUser ? "Tutup Kembali" : "Lihat Lebih Banyak";
+            tombolNavigasi.textContent = lacakUser ? "Lihat Lebih Sedikit" : "Lihat Lebih Banyak";
         }
     }
 }
