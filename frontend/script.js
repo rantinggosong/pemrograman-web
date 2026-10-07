@@ -138,7 +138,7 @@ async function ambilDataMenu() {
     tombolNavigasi.style.display = 'none';
     
     try {
-        const response = await fetch('../backend/salah.json');
+        const response = await fetch('../backend/menu.json');
         if (!response.ok) {
             throw new Error("Gagal mengambil data");
         }
