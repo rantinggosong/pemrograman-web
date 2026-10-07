@@ -11,6 +11,8 @@ const tombolNavigasi = document.getElementById("navigasi");
 const tombolKategori = document.querySelectorAll('#filter-container button');
 const inputPencarian = document.getElementById("input-pencarian");
 const inputKosong = document.getElementById("empty-state");
+const loadingState = document.getElementById("loading-state");
+const errorState = document.getElementById("error-state");
 
 function renderMenu() {
     let dataSaringan;
@@ -128,16 +130,30 @@ window.addEventListener('resize', () => {
 });
 
 async function ambilDataMenu() {
+    loadingState.classList.remove('hidden');
+    loadingState.classList.add('flex');
+    errorState.classList.add('hidden');
+    errorState.classList.remove('flex');
+    menuContainer.classList.add('hidden');
+    tombolNavigasi.style.display = 'none';
+    
     try {
-        const response = await fetch('../backend/menu.json');
+        const response = await fetch('../backend/salah.json');
         if (!response.ok) {
             throw new Error("Gagal mengambil data");
         }
         
         dataMenu = await response.json();
+
+        loadingState.classList.add('hidden');
+        loadingState.classList.remove('flex');
         renderMenu();
     } catch (error) {
         console.error("Terjadi kesalahan:", error);
+        loadingState.classList.add('hidden');
+        loadingState.classList.remove('flex');
+        errorState.classList.remove('hidden');
+        errorState.classList.add('flex');
     }
 }
 
