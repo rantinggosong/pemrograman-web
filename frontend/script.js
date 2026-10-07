@@ -1,15 +1,8 @@
-const dataMenu = [
-    { id: 1, nama: "Cappuccino", gambar: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80", harga: 25000, kategori: "Minuman" },
-    { id: 2, nama: "Americano", gambar: "https://images.unsplash.com/photo-1551030173-122aabc4489c?w=500&q=80", harga: 20000, kategori: "Minuman" },
-    { id: 3, nama: "Espresso", gambar: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=500&q=80", harga: 18000, kategori: "Minuman" },
-    { id: 4, nama: "Latte Art", gambar: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&q=80", harga: 28000, kategori: "Minuman" },
-    { id: 5, nama: "Mocha", gambar: "https://images.unsplash.com/photo-1578314675249-a6948ff17628?w=500&q=80", harga: 30000, kategori: "Minuman" },
-    { id: 6, nama: "Macchiato", gambar: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=500&q=80", harga: 26000, kategori: "Minuman" },
-    { id: 7, nama: "Cold Brew", gambar: "https://images.unsplash.com/photo-1461023058943-0708e52e4604?w=500&q=80", harga: 22000, kategori: "Minuman" },
-    { id: 8, nama: "Affogato", gambar: "https://images.unsplash.com/photo-1594631252845-29fc4fac8c76?w=500&q=80", harga: 35000, kategori: "Minuman" }
-];
+let dataMenu = [];
 
-let lacakUser = false;
+let batasAwal = window.innerWidth >= 1024 ? 6 : 4;
+let jumlahTampil = batasAwal;
+
 let kategoriAktif = "All";
 let kataKunci = "";
 
@@ -20,9 +13,8 @@ const inputPencarian = document.getElementById("input-pencarian");
 const inputKosong = document.getElementById("empty-state");
 
 function renderMenu() {
-    let batasAwal = window.innerWidth >= 1024 ? 6 : 4;
-
     let dataSaringan;
+    
     if (kategoriAktif === "All") {
         dataSaringan = dataMenu;
     } else {
@@ -33,12 +25,7 @@ function renderMenu() {
         dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
     }
 
-    let dataTampil;
-    if (lacakUser === true) {
-        dataTampil = dataSaringan;
-    } else {
-        dataTampil = dataSaringan.slice(0, batasAwal);
-    }
+    let dataTampil = dataSaringan.slice(0, jumlahTampil);
 
     menuContainer.innerHTML = '';
 
@@ -75,7 +62,11 @@ function renderMenu() {
             tombolNavigasi.style.display = 'none';
         } else {
             tombolNavigasi.style.display = 'block';
-            tombolNavigasi.textContent = lacakUser ? "Lihat Lebih Sedikit" : "Lihat Lebih Banyak";
+            if (jumlahTampil >= dataSaringan.length) {
+                tombolNavigasi.textContent = "Tutup Kembali";
+            } else {
+                tombolNavigasi.textContent = "Lihat Lebih Banyak";
+            }
         }
     }
 }
@@ -94,13 +85,22 @@ tombolKategori.forEach(tombol => {
     tombol.addEventListener('click', () => {
         kategoriAktif = tombol.dataset.kategori;
         updateGayaTombolAktif(tombol);
-        lacakUser = false;
+        jumlahTampil = batasAwal;
         renderMenu();
     });
 });
 
 tombolNavigasi.addEventListener('click', () => {
-    lacakUser = !lacakUser;
+    let dataSaringan = kategoriAktif === "All" ? dataMenu : dataMenu.filter(item => item.kategori === kategoriAktif);
+    if (kataKunci !== "") {
+        dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
+    }
+
+    if (jumlahTampil >= dataSaringan.length) {
+        jumlahTampil = batasAwal;
+    } else {
+        jumlahTampil += 4;
+    }
     renderMenu();
 });
 
@@ -108,7 +108,7 @@ inputPencarian.addEventListener('keyup', (e) => {
     e.preventDefault();
     if (e.key === 'Enter') {
         kataKunci = e.target.value.trim();
-        lacakUser = false;
+        jumlahTampil = batasAwal;
         renderMenu();
     }
 });
@@ -116,13 +116,29 @@ inputPencarian.addEventListener('keyup', (e) => {
 inputPencarian.addEventListener('input', (e) => {
     if (e.target.value.trim() === "") {
         kataKunci = "";
-        lacakUser = false;
+        jumlahTampil = batasAwal;
         renderMenu();
     }
 });
 
 window.addEventListener('resize', () => {
+    batasAwal = window.innerWidth >= 1024 ? 6 : 4;
+    jumlahTampil = batasAwal;
     renderMenu();
 });
 
-renderMenu();
+async function ambilDataMenu() {
+    try {
+        const response = await fetch('../backend/menu.json');
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data");
+        }
+        
+        dataMenu = await response.json();
+        renderMenu();
+    } catch (error) {
+        console.error("Terjadi kesalahan:", error);
+    }
+}
+
+ambilDataMenu();
