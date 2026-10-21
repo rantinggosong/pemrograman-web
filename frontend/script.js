@@ -1,5 +1,3 @@
-let dataMenu = [];
-
 let batasAwal = window.innerWidth >= 1024 ? 6 : 4;
 let jumlahTampil = batasAwal;
 
@@ -11,46 +9,47 @@ const tombolNavigasi = document.getElementById("navigasi");
 const tombolKategori = document.querySelectorAll('#filter-container button');
 const inputPencarian = document.getElementById("input-pencarian");
 const inputKosong = document.getElementById("empty-state");
-const loadingState = document.getElementById("loading-state");
-const errorState = document.getElementById("error-state");
 
-function renderMenu() {
-    let dataSaringan;
-    
-    if (kategoriAktif === "All") {
-        dataSaringan = dataMenu;
-    } else {
-        dataSaringan = dataMenu.filter(item => item.kategori === kategoriAktif);
-    }
+/**
+ * filterMenuUI()
+ * 
+ * Menggantikan renderMenu() yang lama.
+ * Tidak lagi membuat ulang HTML — semua kartu sudah dicetak oleh PHP (SSR).
+ * Strateginya adalah Show/Hide: iterasi .kartu-menu yang sudah ada di DOM,
+ * lalu tampilkan/sembunyikan berdasarkan filter kategori, kata kunci, dan jumlahTampil.
+ */
+function filterMenuUI() {
+    const semuaKartu = document.querySelectorAll('.kartu-menu');
+    let jumlahCocok = 0;    // kartu yang lolos filter (sebelum batas tampil)
+    let jumlahTampilSudah = 0; // kartu yang sudah ditampilkan
 
-    if (kataKunci !== "") {
-        dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
-    }
+    semuaKartu.forEach(kartu => {
+        const kategoriKartu = kartu.dataset.kategori;
+        const namaKartu     = kartu.dataset.nama; // sudah lowercase dari PHP
 
-    let dataTampil = dataSaringan.slice(0, jumlahTampil);
+        // Cek filter kategori
+        const cocokKategori = (kategoriAktif === 'All') || (kategoriKartu === kategoriAktif);
 
-    menuContainer.innerHTML = '';
+        // Cek filter kata kunci (case-insensitive, sudah lowercase dari PHP)
+        const cocokKataKunci = (kataKunci === '') || namaKartu.includes(kataKunci.toLowerCase());
 
-    dataTampil.forEach(item => {
-        const kartuMenu = `
-            <div class="flex flex-col bg-white/30 border border-[#1A110A]/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm">
-                <div class="bg-[#1A110A] p-2 md:p-4">
-                    <div class="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
-                        <img src="${item.gambar}" alt="${item.nama}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                    </div>
-                </div>
-                <div class="flex flex-col items-center p-3 md:p-6 text-center">
-                    <h3 class="font-serif text-base md:text-2xl font-bold text-[#1A110A] mb-3 md:mb-6 leading-tight">${item.nama}</h3>
-                    <button class="w-full py-1.5 px-2 md:py-3 md:px-4 text-xs md:text-base bg-transparent border md:border-2 border-[#1A110A]/30 text-[#1A110A] font-semibold rounded-lg md:rounded-xl hover:bg-[#1A110A] hover:text-[#D5B99F] transition-all duration-300">
-                        Order Now (Rp ${item.harga})
-                    </button>
-                </div>
-            </div>
-        `;
-        menuContainer.insertAdjacentHTML('beforeend', kartuMenu);
+        if (cocokKategori && cocokKataKunci) {
+            jumlahCocok++;
+
+            // Terapkan batas tampil
+            if (jumlahTampilSudah < jumlahTampil) {
+                kartu.classList.remove('hidden');
+                jumlahTampilSudah++;
+            } else {
+                kartu.classList.add('hidden');
+            }
+        } else {
+            kartu.classList.add('hidden');
+        }
     });
 
-    if (dataSaringan.length === 0) {
+    // Logika empty state
+    if (jumlahCocok === 0) {
         menuContainer.classList.add('hidden');
         inputKosong.classList.remove('hidden');
         inputKosong.classList.add('flex');
@@ -60,11 +59,12 @@ function renderMenu() {
         inputKosong.classList.remove('flex');
         inputKosong.classList.add('hidden');
 
-        if (dataSaringan.length <= batasAwal) {
+        // Logika tombol navigasi
+        if (jumlahCocok <= batasAwal) {
             tombolNavigasi.style.display = 'none';
         } else {
             tombolNavigasi.style.display = 'block';
-            if (jumlahTampil >= dataSaringan.length) {
+            if (jumlahTampil >= jumlahCocok) {
                 tombolNavigasi.textContent = "Tutup Kembali";
             } else {
                 tombolNavigasi.textContent = "Lihat Lebih Banyak";
@@ -83,78 +83,61 @@ function updateGayaTombolAktif(tombolDiklik) {
     tombolDiklik.classList.add("font-bold", "border-b-2", "border-[#1A110A]");
 }
 
+// Event: Filter Kategori
 tombolKategori.forEach(tombol => {
     tombol.addEventListener('click', () => {
         kategoriAktif = tombol.dataset.kategori;
         updateGayaTombolAktif(tombol);
         jumlahTampil = batasAwal;
-        renderMenu();
+        filterMenuUI();
     });
 });
 
+// Event: Tombol Navigasi "Lihat Lebih Banyak / Tutup Kembali"
 tombolNavigasi.addEventListener('click', () => {
-    let dataSaringan = kategoriAktif === "All" ? dataMenu : dataMenu.filter(item => item.kategori === kategoriAktif);
-    if (kataKunci !== "") {
-        dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
-    }
+    // Hitung total kartu yang lolos filter
+    const semuaKartu = document.querySelectorAll('.kartu-menu');
+    let jumlahCocok = 0;
+    semuaKartu.forEach(kartu => {
+        const cocokKategori  = (kategoriAktif === 'All') || (kartu.dataset.kategori === kategoriAktif);
+        const cocokKataKunci = (kataKunci === '') || kartu.dataset.nama.includes(kataKunci.toLowerCase());
+        if (cocokKategori && cocokKataKunci) jumlahCocok++;
+    });
 
-    if (jumlahTampil >= dataSaringan.length) {
+    if (jumlahTampil >= jumlahCocok) {
         jumlahTampil = batasAwal;
     } else {
         jumlahTampil += 4;
     }
-    renderMenu();
+    filterMenuUI();
 });
 
+// Event: Pencarian (Enter)
 inputPencarian.addEventListener('keyup', (e) => {
     e.preventDefault();
     if (e.key === 'Enter') {
         kataKunci = e.target.value.trim();
         jumlahTampil = batasAwal;
-        renderMenu();
+        filterMenuUI();
     }
 });
 
+// Event: Pencarian (hapus input → reset)
 inputPencarian.addEventListener('input', (e) => {
     if (e.target.value.trim() === "") {
         kataKunci = "";
         jumlahTampil = batasAwal;
-        renderMenu();
+        filterMenuUI();
     }
 });
 
+// Event: Resize → sesuaikan batas awal tampil
 window.addEventListener('resize', () => {
     batasAwal = window.innerWidth >= 1024 ? 6 : 4;
     jumlahTampil = batasAwal;
-    renderMenu();
+    filterMenuUI();
 });
 
-async function ambilDataMenu() {
-    loadingState.classList.remove('hidden');
-    loadingState.classList.add('flex');
-    errorState.classList.add('hidden');
-    errorState.classList.remove('flex');
-    menuContainer.classList.add('hidden');
-    tombolNavigasi.style.display = 'none';
-    
-    try {
-        const response = await fetch('../backend/menu.json');
-        if (!response.ok) {
-            throw new Error("Gagal mengambil data");
-        }
-        
-        dataMenu = await response.json();
-
-        loadingState.classList.add('hidden');
-        loadingState.classList.remove('flex');
-        renderMenu();
-    } catch (error) {
-        console.error("Terjadi kesalahan:", error);
-        loadingState.classList.add('hidden');
-        loadingState.classList.remove('flex');
-        errorState.classList.remove('hidden');
-        errorState.classList.add('flex');
-    }
-}
-
-ambilDataMenu();
+// Inisialisasi awal: jalankan filter saat halaman dimuat
+// Kartu sudah ada dari PHP SSR, tinggal terapkan batas tampil awal
+filterMenuUI();

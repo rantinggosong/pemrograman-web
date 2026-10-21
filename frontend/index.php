@@ -1,3 +1,11 @@
+<?php
+// 1. Memanggil class Menu OOP dari folder backend
+require_once __DIR__ . '/../backend/Menu.php';
+
+// 2. Dapatkan array berisi Objek-Objek Menu dari file JSON
+$menuFile = __DIR__ . '/../backend/menu.json';
+$dataMenu = Menu::getAllFromJSON($menuFile);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +16,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
     
     <script>
       tailwind.config = {
@@ -49,7 +56,30 @@
                 <button class="text-[#5C4A3D] font-medium hover:text-[#1A110A] transition-all pb-1 shrink-0" data-kategori="Snack" id="snack-btn">Snack</button>
             </div>
 
+            <!-- Wadah Menu: Server-Side Rendering (SSR) Menggunakan Perulangan Objek Menu -->
             <div id="menu-container" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 w-full max-w-5xl px-2 md:px-0">
+                <?php foreach ($dataMenu as $item): ?>
+                    <div class="kartu-menu flex flex-col bg-white/30 border border-[#1A110A]/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm"
+                         data-kategori="<?= htmlspecialchars($item->kategori); ?>"
+                         data-nama="<?= htmlspecialchars(strtolower($item->nama)); ?>">
+                        <div class="bg-[#1A110A] p-2 md:p-4 relative">
+                            <!-- Status Badge dari method getStatusBadge() -->
+                            <div class="absolute top-3 left-3 z-10">
+                                <?= $item->getStatusBadge() ?>
+                            </div>
+                            <div class="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
+                                <img src="<?= htmlspecialchars($item->gambar) ?>" alt="<?= htmlspecialchars($item->nama) ?>" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center p-3 md:p-6 text-center">
+                            <h3 class="font-serif text-base md:text-2xl font-bold text-[#1A110A] mb-3 md:mb-6 leading-tight"><?= htmlspecialchars($item->nama) ?></h3>
+                            <!-- Harga Rupiah dari method getHargaRupiah() -->
+                            <button class="w-full py-1.5 px-2 md:py-3 md:px-4 text-xs md:text-base bg-transparent border md:border-2 border-[#1A110A]/30 text-[#1A110A] font-semibold rounded-lg md:rounded-xl hover:bg-[#1A110A] hover:text-[#D5B99F] transition-all duration-300">
+                                Order Now (<?= $item->getHargaRupiah() ?>)
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <div id="empty-state" class="hidden flex-col items-center justify-center w-full py-12 text-center">
