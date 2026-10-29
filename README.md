@@ -1,4 +1,4 @@
-# Coffee & Food Hub — Arsitektur Aplikasi Web Fullstack
+# web pemesanan makanan & minuman cafe berbasis qr code
 
 Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pemesanan makanan dan minuman. Repositori ini merangkum evolusi teknis berkelanjutan dari antarmuka klien statis (Week 2), interaktivitas DOM (Week 3), integrasi REST API asinkron (Week 4), hingga pemrosesan server-side prosedural dengan PHP (Week 5), sebagai pijakan menuju Object-Oriented Programming (Week 6) dan Arsitektur MVC (Week 7).
 
