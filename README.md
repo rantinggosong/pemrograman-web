@@ -1,5 +1,6 @@
 # Coffee & Food Hub — Arsitektur Klien Web
 
+Dokumentasi arsitektur dan teknis implementasi aplikasi web pemesanan berbasis klien (*client-side*). Repositori ini merangkum evolusi pengembangan dari Week 2 hingga Week 4 berdasarkan silabus mata kuliah Pemrograman Web, mencakup perancangan antarmuka semantik, manipulasi DOM interaktif, hingga integrasi data asinkron berbasis REST API.
 
 ---
 
@@ -8,10 +9,19 @@
 - [Gambaran Umum](#gambaran-umum)
 - [Arsitektur & Alur Data](#arsitektur--alur-data)
 - [Struktur Repositori](#struktur-repositori)
-- [Evolusi Teknis (Sprint 01 — Sprint 03)](#evolusi-teknis-sprint-01--sprint-03)
-  - [Sprint 01 (Week 2): UI Semantik & Sistem Desain Responsif](#sprint-01-week-2-ui-semantik--sistem-desain-responsif)
-  - [Sprint 02 (Week 3): Arsitektur DOM & Interaksi Berbasis Event](#sprint-02-week-3-arsitektur-dom--interaksi-berbasis-event)
-  - [Sprint 03 (Week 4): Fetch Asinkron & Manajemen Status API](#sprint-03-week-4-fetch-asinkron--manajemen-status-api)
+- [Evolusi Teknis (Week 2 — Week 4)](#evolusi-teknis-week-2--week-4)
+  - [Week 2: UI Semantik & Sistem Desain Responsif](#week-2-ui-semantik--sistem-desain-responsif)
+    - [Task 01: Membangun Struktur HTML Semantik](#task-01-membangun-struktur-html-semantik)
+    - [Task 02: Sistem Desain & Tata Letak Responsif](#task-02-sistem-desain--tata-letak-responsif)
+    - [Task 03: Penyempurnaan Tampilan Antarmuka](#task-03-penyempurnaan-tampilan-antarmuka)
+  - [Week 3: Arsitektur DOM & Interaksi Berbasis Event](#week-3-arsitektur-dom--interaksi-berbasis-event)
+    - [Task 01: Memilih & Mengubah Elemen DOM](#task-01-memilih--mengubah-elemen-dom)
+    - [Task 02: Menangani Event Pengguna](#task-02-menangani-event-pengguna)
+    - [Task 03: Membangun Interaksi Paginasi Progresif](#task-03-membangun-interaksi-paginasi-progresif)
+  - [Week 4: Integrasi REST API & Manajemen Status Asinkron](#week-4-integrasi-rest-api--manajemen-status-asinkron)
+    - [Task 01: Menghubungkan Antarmuka ke REST API](#task-01-menghubungkan-antarmuka-ke-rest-api)
+    - [Task 02: Menampilkan Data API secara Dinamis](#task-02-menampilkan-data-api-secara-dinamis)
+    - [Task 03: Mengelola Siklus Status API (API State)](#task-03-mengelola-siklus-status-api-api-state)
 - [Skema Data & Kontrak API](#skema-data--kontrak-api)
 - [Spesifikasi Manajemen Status (State Management)](#spesifikasi-manajemen-status-state-management)
 - [Panduan Pengembangan Lokal](#panduan-pengembangan-lokal)
@@ -32,7 +42,7 @@ Tujuan utama proyek ini adalah membangun fondasi arsitektur antarmuka (*frontend
 
 ## Arsitektur & Alur Data
 
-Diagram berikut mengilustrasikan siklus hidup status antarmuka dan aliran data satu arah (*unidirectional data flow*) yang diterapkan pada Sprint 01 hingga Sprint 03:
+Diagram berikut mengilustrasikan siklus hidup status antarmuka dan aliran data satu arah (*unidirectional data flow*) yang diterapkan pada Week 2 hingga Week 4:
 
 ```mermaid
 flowchart TD
@@ -78,108 +88,241 @@ tugas-pemrograman-web/
 
 ---
 
-## Evolusi Teknis (Sprint 01 — Sprint 03)
+## Evolusi Teknis (Week 2 — Week 4)
 
-### Sprint 01 (Week 2): UI Semantik & Sistem Desain Responsif
+Setiap minggu pembelajaran berfokus pada 3 tugas utama (*Task 01, Task 02, dan Task 03*) yang diselesaikan secara bertahap dan terukur.
 
-#### Sasaran
-Menerjemahkan kebutuhan produk ke dalam antarmuka web yang semantik, aksesibel, dan beradaptasi sempurna di berbagai ukuran layar perangkat.
+---
 
-#### Rincian Implementasi
-- **Struktur Dokumen Semantik:** Menggunakan elemen *landmark* HTML5 (`<main>`, `<aside>`, hierarki judul `<h1>`-`<h3>`, `<button>`) untuk memastikan struktur dokumen yang terstandarisasi dan mudah dibaca oleh teknologi asistif (*screen reader*).
-- **Token Sistem Desain:** Mengonfigurasi palet warna kustom bertema kuliner hangat menggunakan konfigurasi *runtime* Tailwind CSS:
-  ```javascript
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          'primary-light': '#D5B99F',
-          'dark': '#1A110A',
-          'gray-500': '#5C4A3D',
-          'gray-800': '#2C1E16',
-        },
-        fontFamily: {
-          'sans': ['"Plus Jakarta Sans"', 'sans-serif'],
-          'serif': ['"Playfair Display"', 'serif'],
-        }
+### Week 2: UI Semantik & Sistem Desain Responsif
+
+Fokus Week 2 adalah membangun fondasi visual antarmuka web yang kokoh, semantik, dan adaptif di berbagai resolusi layar.
+
+#### Task 01: Membangun Struktur HTML Semantik
+Mengonstruksi tata letak halaman menggunakan elemen semantik HTML5 standar untuk memastikan kejelasan hierarki dokumen dan aksesibilitas:
+- Menggunakan elemen `<main>` sebagai wadah konten utama aplikasi.
+- Menggunakan elemen `<aside>` untuk ringkasan keranjang belanja floating.
+- Menggunakan elemen `<input>` dan `<button>` dengan identitas yang jelas untuk interaktivitas.
+
+```html
+<!-- Cuplikan Struktur Semantik Utama (frontend/index.html) -->
+<div class="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 relative min-h-screen">
+    <main class="flex flex-col items-center w-full flex-1">
+        <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#1A110A] mb-2 tracking-tight capitalize">Menu</h1>
+        <p class="text-xs md:text-sm font-medium text-[#5C4A3D] mb-6 md:mb-8 text-center px-4">Pesan langsung dari meja kamu</p>
+        
+        <div class="w-full max-w-2xl mb-6 md:mb-8 relative px-4 md:px-0">
+            <input id="input-pencarian" type="text" placeholder="Cari makanan, minuman...">
+        </div>
+        
+        <div id="menu-container" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 w-full max-w-5xl px-2 md:px-0"></div>
+    </main>
+</div>
+```
+
+#### Task 02: Sistem Desain & Tata Letak Responsif
+Mengonfigurasi tema desain dan sistem tata letak responsif menggunakan Tailwind CSS:
+- Mendefinisikan palet warna kustom bernuansa hangat (*earthy warm palette*).
+- Menetapkan tipografi ganda: *Playfair Display* untuk elemen judul dan *Plus Jakarta Sans* untuk teks isi.
+- Menerapkan tata letak responsif: 2 kolom pada layar ponsel (`grid-cols-2`) dan 3 kolom pada layar komputer (`lg:grid-cols-3`) tanpa terjadinya tumpahan horizontal (*zero horizontal overflow*).
+
+```javascript
+// Konfigurasi Desain Sistem (frontend/index.html)
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'primary-light': '#D5B99F',
+        'dark': '#1A110A',
+        'gray-500': '#5C4A3D',
+        'gray-800': '#2C1E16',
+      },
+      fontFamily: {
+        'sans': ['"Plus Jakarta Sans"', 'sans-serif'],
+        'serif': ['"Playfair Display"', 'serif'],
       }
     }
   }
-  ```
-- **Ketahanan Tata Letak (*Responsive Grid*):**
-  - Layar Ponsel (`< 1024px`): Grid 2 kolom dengan densitas kartu optimal (`grid-cols-2`).
-  - Layar Komputer / Desktop (`>= 1024px`): Grid 3 kolom yang lapang (`lg:grid-cols-3`).
-  - Pencegahan tumpahan horizontal (*zero horizontal overflow*) dengan aksen gradien radial pada latar belakang.
+}
+```
+
+#### Task 03: Penyempurnaan Tampilan Antarmuka
+Menyempurnakan detail visual antarmuka agar terasa premium:
+- Menerapkan efek kaca transparan (*glassmorphism*) dengan kelas `bg-white/30` dan `backdrop-blur-sm`.
+- Menambahkan transisi halus pada kartu menu saat disentuh kursor (`hover:scale-105 transition-transform duration-500`).
+- Menyusun kartu produk yang rapi dengan pembagian visual antara wadah gambar dan informasi harga.
 
 ---
 
-### Sprint 02 (Week 3): Arsitektur DOM & Interaksi Berbasis Event
+### Week 3: Arsitektur DOM & Interaksi Berbasis Event
 
-#### Sasaran
-Menghidupkan antarmuka statis melalui penanganan *event* pengguna, mekanisme penyaringan kategori instan, serta mesin paginasi dinamis menggunakan JavaScript murni.
+Fokus Week 3 adalah mengimplementasikan logika interaktivitas pengguna berbasis JavaScript murni (ES6+) tanpa bantuan pustaka pihak ketiga.
 
-#### Rincian Implementasi
-- **Pengalih Kategori Aktif (*Dynamic Category Switcher*):** Menggunakan atribut data semantik (`data-kategori`) untuk mengisolasi logika pemilihan kategori tanpa memicu muat ulang halaman:
-  ```javascript
-  function updateGayaTombolAktif(tombolDiklik) {
-      tombolKategori.forEach(tombol => {
-          tombol.classList.remove("font-bold", "border-b-2", "border-[#1A110A]");
-          tombol.classList.add("font-medium", "text-[#5C4A3D]");
-      });
-      tombolDiklik.classList.remove("font-medium", "text-[#5C4A3D]");
-      tombolDiklik.classList.add("font-bold", "border-b-2", "border-[#1A110A]");
-  }
-  ```
-- **Mesin Paginasi Progresif (*Load More Engine*):**
-  - Batas awal kartu yang tampil dihitung dinamis berdasarkan lebar jendela peramban: 6 kartu pada desktop (`>= 1024px`) dan 4 kartu pada perangkat seluler.
-  - Setiap interaksi tombol "Lihat Lebih Banyak" menambah 4 kartu tambahan ke layar.
-  - *Reversible State:* Ketika seluruh data dalam kategori telah ditampilkan, tombol otomatis bertransformasi menjadi "Tutup Kembali", yang mengembalikan jumlah kartu ke batas awal saat ditekan.
-- **Pencarian Real-Time:** Penanganan terpisah untuk eksekusi pencarian saat tombol `Enter` ditekan (`keyup`), serta reset tampilan instan ketika kolom input dikosongkan (`input`).
+#### Task 01: Memilih & Mengubah Elemen DOM
+Mengambil referensi elemen DOM secara terprediksi dan mengontrol manipulasi tampilan:
+- Mengambil elemen menggunakan `document.getElementById()` dan `document.querySelectorAll()`.
+- Mengontrol penambahan dan penghapusan kelas Tailwind (`classList.add`, `classList.remove`) untuk menandai tombol kategori yang sedang aktif.
+
+```javascript
+// Pemilihan Elemen & Manipulasi Kelas (frontend/script.js)
+const menuContainer = document.getElementById("menu-container");
+const tombolNavigasi = document.getElementById("navigasi");
+const tombolKategori = document.querySelectorAll('#filter-container button');
+
+function updateGayaTombolAktif(tombolDiklik) {
+    tombolKategori.forEach(tombol => {
+        tombol.classList.remove("font-bold", "border-b-2", "border-[#1A110A]");
+        tombol.classList.add("font-medium", "text-[#5C4A3D]");
+    });
+    tombolDiklik.classList.remove("font-medium", "text-[#5C4A3D]");
+    tombolDiklik.classList.add("font-bold", "border-b-2", "border-[#1A110A]");
+}
+```
+
+#### Task 02: Menangani Event Pengguna
+Memasang pendengar event (*event listeners*) untuk merespons tindakan pengguna secara instan:
+- **Event `click` pada filter:** Memperbarui variabel kategori aktif dan memicu penyaringan data ulang.
+- **Event `keyup` pada pencarian:** Mendeteksi tombol `Enter` untuk mengeksekusi pencarian teks.
+- **Event `input` pada pencarian:** Mengembalikan tampilan ke kondisi penuh ketika input teks dikosongkan.
+- **Event `resize` pada jendela:** Menyesuaikan ambang batas jumlah kartu awal saat orientasi atau ukuran layar berubah.
+
+```javascript
+// Penanganan Event Pengguna (frontend/script.js)
+tombolKategori.forEach(tombol => {
+    tombol.addEventListener('click', () => {
+        kategoriAktif = tombol.dataset.kategori;
+        updateGayaTombolAktif(tombol);
+        jumlahTampil = batasAwal;
+        renderMenu();
+    });
+});
+
+inputPencarian.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        kataKunci = e.target.value.trim();
+        jumlahTampil = batasAwal;
+        renderMenu();
+    }
+});
+```
+
+#### Task 03: Membangun Interaksi Paginasi Progresif
+Membangun satu fitur interaksi utuh (*End-to-End Interaction*) berupa mesin paginasi dinamis:
+- Menghitung kuota awal kartu berdasarkan lebar layar: 6 item di desktop (`window.innerWidth >= 1024`) dan 4 item di perangkat seluler.
+- Menambahkan 4 kartu baru setiap kali tombol "Lihat Lebih Banyak" diklik.
+- *Reversible Mechanism:* Ketika seluruh data dalam kategori telah terbuka, teks tombol bertransformasi menjadi "Tutup Kembali", yang mereset jumlah tampilan kembali ke kuota awal jika ditekan.
+
+```javascript
+// Logika Paginasi Progresif (frontend/script.js)
+tombolNavigasi.addEventListener('click', () => {
+    let dataSaringan = kategoriAktif === "All" ? dataMenu : dataMenu.filter(item => item.kategori === kategoriAktif);
+    if (kataKunci !== "") {
+        dataSaringan = dataSaringan.filter(item => item.nama.toLowerCase().includes(kataKunci.toLowerCase()));
+    }
+
+    if (jumlahTampil >= dataSaringan.length) {
+        jumlahTampil = batasAwal;
+    } else {
+        jumlahTampil += 4;
+    }
+    renderMenu();
+});
+```
 
 ---
 
-### Sprint 03 (Week 4): Fetch Asinkron & Manajemen Status API
+### Week 4: Integrasi REST API & Manajemen Status Asinkron
 
-#### Sasaran
-Memisahkan data dari tampilan statis dengan mengintegrasikan *endpoint* data JSON eksternal, serta menerapkan penanganan status asinkron (*asynchronous states*) secara komprehensif.
+Fokus Week 4 adalah memisahkan data dari kode program dan mengelola status asinkron pemanggilan jaringan (*network states*).
 
-#### Rincian Implementasi
-- **Pengambilan Data Asinkron:** Menggunakan antarmuka bawaan `fetch()` dengan sintaks `async/await` serta validasi kode status HTTP:
-  ```javascript
-  async function ambilDataMenu() {
-      // 1. Transisi ke Status Loading
-      loadingState.classList.remove('hidden');
-      loadingState.classList.add('flex');
-      errorState.classList.add('hidden');
-      menuContainer.classList.add('hidden');
-      tombolNavigasi.style.display = 'none';
-      
-      try {
-          const response = await fetch('../backend/menu.json');
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          dataMenu = await response.json();
+#### Task 01: Menghubungkan Antarmuka ke REST API
+Mengintegrasikan sumber data eksternal menggunakan fungsi `fetch()` asinkron:
+- Mengimplementasikan pola `async/await` yang bersih dan mudah dibaca.
+- Memeriksa validitas kode status HTTP menggunakan `response.ok` sebelum memproses data.
+- Mengonversi *stream* respon jaringan menjadi objek JSON JavaScript asli.
 
-          // 2. Transisi ke Status Sukses
-          loadingState.classList.add('hidden');
-          loadingState.classList.remove('flex');
-          renderMenu();
-      } catch (error) {
-          // 3. Transisi ke Status Error
-          console.error("Terjadi kesalahan saat mengambil data:", error);
-          loadingState.classList.add('hidden');
-          errorState.classList.remove('hidden');
-          errorState.classList.add('flex');
-      }
-  }
-  ```
-- **Jaminan Pengelolaan 4 Status Utama:**
-  1. **Loading State:** Menampilkan indikator animasi perputar (*CSS spinner*) saat request jaringan berlangsung untuk menjaga pengalaman pengguna.
-  2. **Success State:** Memetakan array data menjadi komponen kartu DOM dan mengatur visibilitas tombol paginasi.
-  3. **Empty State:** Menampilkan pesan informatif `#empty-state` saat penyaringan pencarian tidak menemukan kecocokan data.
-  4. **Error State:** Mengisolasi kegagalan koneksi atau data rusak, menyembunyikan kontainer kosong, dan menampilkan pesan galat terstruktur disertai tombol aksi muat ulang (`location.reload()`).
+```javascript
+// Pemanggilan REST API Asinkron (frontend/script.js)
+async function ambilDataMenu() {
+    try {
+        const response = await fetch('../backend/menu.json');
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data dari server");
+        }
+        dataMenu = await response.json();
+        renderMenu();
+    } catch (error) {
+        console.error("Terjadi galat:", error);
+    }
+}
+```
+
+#### Task 02: Menampilkan Data API secara Dinamis
+Mengolah data JSON dan merendernya menjadi elemen antarmuka secara dinamis:
+- Menerapkan fungsi penyaringan ganda (*chained filtering*): kategori produk dan kecocokan kata kunci nama.
+- Memotong array data sesuai indeks paginasi aktif (`dataSaringan.slice(0, jumlahTampil)`).
+- Menginjeksi markup HTML kartu menu menggunakan *template literals* secara efisien ke dalam `#menu-container`.
+
+```javascript
+// Render Data Dinamis (frontend/script.js)
+let dataTampil = dataSaringan.slice(0, jumlahTampil);
+menuContainer.innerHTML = '';
+
+dataTampil.forEach(item => {
+    const kartuMenu = `
+        <div class="flex flex-col bg-white/30 border border-[#1A110A]/10 rounded-2xl overflow-hidden shadow-lg backdrop-blur-sm">
+            <div class="bg-[#1A110A] p-2 md:p-4">
+                <img src="${item.gambar}" alt="${item.nama}" class="w-full aspect-square object-cover rounded-xl">
+            </div>
+            <div class="flex flex-col items-center p-3 md:p-6 text-center">
+                <h3 class="font-serif text-base md:text-2xl font-bold text-[#1A110A] mb-3">${item.nama}</h3>
+                <button class="w-full py-2 bg-transparent border border-[#1A110A]/30 font-semibold rounded-lg">
+                    Order Now (Rp ${item.harga})
+                </button>
+            </div>
+        </div>
+    `;
+    menuContainer.insertAdjacentHTML('beforeend', kartuMenu);
+});
+```
+
+#### Task 03: Mengelola Siklus Status API (API State)
+Mengimplementasikan arsitektur status menyeluruh untuk menjamin keandalan sistem terhadap berbagai kondisi jaringan:
+- **Loading State:** Mengaktifkan `#loading-state` dengan animasi putar saat transmisi data berlangsung, sekaligus menyembunyikan kontainer menu.
+- **Success State:** Mematikan indikator loading dan menampilkan grid menu secara mulus.
+- **Empty State:** Mengaktifkan `#empty-state` dengan pesan "Yang kamu cari tidak ditemukan" ketika hasil filter bernilai 0.
+- **Error State:** Mengisolasi kegagalan jaringan di dalam blok `catch`, menampilkan pesan "#error-state" berlatar teks peringatan, serta menyediakan tombol aksi pemulihan (*reload recovery*).
+
+```javascript
+// Manajemen Siklus Status API (frontend/script.js)
+async function ambilDataMenu() {
+    // 1. Inisialisasi Loading State
+    loadingState.classList.remove('hidden');
+    loadingState.classList.add('flex');
+    errorState.classList.add('hidden');
+    menuContainer.classList.add('hidden');
+    tombolNavigasi.style.display = 'none';
+    
+    try {
+        const response = await fetch('../backend/menu.json');
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        
+        dataMenu = await response.json();
+
+        // 2. Transisi ke Success State
+        loadingState.classList.add('hidden');
+        loadingState.classList.remove('flex');
+        renderMenu();
+    } catch (error) {
+        // 3. Transisi ke Error State
+        console.error("Terjadi kesalahan:", error);
+        loadingState.classList.add('hidden');
+        loadingState.classList.remove('flex');
+        errorState.classList.remove('hidden');
+        errorState.classList.add('flex');
+    }
+}
+```
 
 ---
 
