@@ -30,6 +30,10 @@ halo, kami dari tim pengembang yang mengembangkan project web pemesanan makanan 
     - [Task 01: Mendefinisikan Class & Menginisialisasi Object](#task-01-mendefinisikan-class--menginisialisasi-object)
     - [Task 02: Properti Tertipe & Method Fungsional](#task-02-properti-tertipe--method-fungsional)
     - [Task 03: Menghasilkan Konten Dinamis Melalui Object](#task-03-menghasilkan-konten-dinamis-melalui-object)
+  - [Week 7: Arsitektur Model-View-Controller (MVC)](#week-7-arsitektur-model-view-controller-mvc)
+    - [Task 01: Desain Struktur MVC](#task-01-desain-struktur-mvc)
+    - [Task 02: Membangun Controller](#task-02-membangun-controller)
+    - [Task 03: Menghubungkan Model, Controller & View](#task-03-menghubungkan-model-controller--view)
 - [Skema Data & Kontrak API](#skema-data--kontrak-api)
 - [Spesifikasi Manajemen Status (State Management)](#spesifikasi-manajemen-status-state-management)
 - [Panduan Pengembangan Lokal](#panduan-pengembangan-lokal)
@@ -88,17 +92,25 @@ tugas-pemrograman-web/
 │   ├── index.html             # Struktur semantik DOM dan konfigurasi Tailwind CSS
 │   └── script.js              # Logika bisnis klien, event listeners, dan Fetch API
 │
-├── backend/                   # Arsitektur Server-Side (Pencapaian Week 5 & Week 6)
+├── backend/                   # Arsitektur Server-Side (Week 5 — Week 7)
 │   ├── asset/                 # Aset visual untuk kebutuhan server lokal
 │   ├── classes/
 │   │   └── Menu.php           # Class Menu: typed properties, constructor, getter & methods
+│   ├── controllers/
+│   │   └── MenuController.php # Controller: method index() dan show() untuk routing request
 │   ├── data/
 │   │   ├── menu.json          # Sumber data tiruan legacy JSON
 │   │   └── data_menu.php      # Master data array PHP terstruktur
 │   ├── helpers/
 │   │   └── functions.php      # Kumpulan fungsi murni (formatRupiah, saringMenu)
+│   ├── models/
+│   │   └── MenuModel.php      # Model: query data, filter, dan konversi ke object Menu
+│   ├── views/
+│   │   └── menu/
+│   │       ├── index.php      # View daftar menu (template HTML murni)
+│   │       └── show.php       # View detail item (template HTML murni)
 │   ├── api.php                # Endpoint REST API JSON untuk konsumsi klien
-│   └── index.php              # Server-Side Rendering (SSR) + OOP entrypoint utama
+│   └── index.php              # Bootstrap: routing request ke Controller
 │
 ├── material/                  # Materi dan panduan perkuliahan
 ├── .gitignore                 # Filter berkas lingkungan dan editor
@@ -107,7 +119,7 @@ tugas-pemrograman-web/
 
 ---
 
-## Evolusi Teknis (Week 2 — Week 6)
+## Evolusi Teknis (Week 2 — Week 7)
 
 Setiap minggu perkuliahan berfokus pada 3 tugas utama (*Task 01, Task 02, dan Task 03*) yang dikerjakan secara sistematis.
 
@@ -511,6 +523,90 @@ $objectMenu = array_map(function (array $item): Menu {
 
 ---
 
+### Week 7: Arsitektur Model-View-Controller (MVC)
+
+Fokus Week 7 adalah menerapkan pola arsitektur MVC untuk memisahkan tanggung jawab antara pengambilan data (*Model*), penanganan alur request (*Controller*), dan presentasi antarmuka (*View*) secara tegas dan konsisten.
+
+#### Task 01: Desain Struktur MVC
+Merancang dan membangun struktur folder MVC yang terisolasi di dalam direktori `backend/`:
+- Folder `backend/models/` untuk lapisan akses data.
+- Folder `backend/controllers/` untuk lapisan penanganan logika alur request.
+- Folder `backend/views/menu/` untuk lapisan template HTML murni.
+- `backend/index.php` direfaktor menjadi *bootstrap* tipis — hanya menginisialisasi Controller dan mendelegasikan routing.
+
+```
+backend/
+├── controllers/
+│   └── MenuController.php
+├── models/
+│   └── MenuModel.php
+├── views/
+│   └── menu/
+│       ├── index.php
+│       └── show.php
+└── index.php              ← bootstrap & router
+```
+
+#### Task 02: Membangun Controller
+Mengimplementasikan `MenuController` sebagai pusat kendali alur request:
+- **`index()`**: Membaca parameter request (`$_GET['kategori']` dan `$_GET['q']`), memanggil `MenuModel` untuk mendapatkan data terfilter, lalu meneruskan variabel yang sudah bersih ke View.
+- **`show()`**: Membaca parameter `$_GET['id']`, memanggil `MenuModel::cariById()`, dan meneruskan hasilnya ke View detail item. Menangani kondisi item tidak ditemukan (`null`) secara graceful.
+
+```php
+class MenuController
+{
+    private MenuModel $model;
+
+    public function __construct()
+    {
+        $this->model = new MenuModel();
+    }
+
+    public function index(): void
+    {
+        $kategoriAktif  = $_GET['kategori'] ?? 'All';
+        $kataKunci      = trim($_GET['q'] ?? '');
+
+        $daftarMenu     = $this->model->ambilSemua($kategoriAktif, $kataKunci);
+        $totalItem      = $this->model->hitungTotal($kategoriAktif, $kataKunci);
+        $daftarKategori = $this->model->daftarKategori();
+
+        require_once __DIR__ . '/../views/menu/index.php';
+    }
+
+    public function show(): void
+    {
+        $id   = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        $menu = $this->model->cariById($id);
+
+        require_once __DIR__ . '/../views/menu/show.php';
+    }
+}
+```
+
+#### Task 03: Menghubungkan Model, Controller & View
+Mewujudkan alur data penuh dari sumber data ke tampilan melalui tiga lapisan yang terisolasi:
+- **Model (`MenuModel`)** mewarisi seluruh logika dari `helpers/functions.php` dan class `Menu` dari Week 6. Method `ambilSemua()` mengembalikan array `Menu[]` — bukan array asosiatif mentah.
+- **Controller** bertindak sebagai *orchestrator*: menerima request, berkomunikasi dengan Model, lalu mendelegasikan output ke View melalui `require_once`.
+- **View** adalah template HTML murni yang hanya menerima variabel siap pakai (`$daftarMenu`, `$totalItem`, `$daftarKategori`) tanpa logika pengambilan data apa pun di dalamnya.
+
+```php
+$objectMenu = array_map(function (array $item): Menu {
+    return new Menu(
+        $item['id'], $item['nama'], $item['gambar'],
+        $item['harga'], $item['kategori'], $item['status']
+    );
+}, $hasilFilter);
+```
+
+```php
+<?php foreach ($daftarMenu as $menu): ?>
+    <?= $menu->renderKartu(); ?>
+<?php endforeach; ?>
+```
+
+---
+
 ## Skema Data & Kontrak API
 
 Berkas data tiruan dan master data PHP mengikuti standar representasi entitas berikut:
@@ -577,15 +673,16 @@ Pada mode Client-Side (Week 4), antarmuka beroperasi menyerupai mesin status ter
 
 ### Menjalankan Proyek Secara Lokal
 
-#### 1. Week 5 & Week 6 — Server-Side Rendering + OOP (PHP)
-Gunakan server bawaan PHP untuk menjalankan aplikasi backend dari root repositori:
+#### 1. Week 5, Week 6 & Week 7 — Server-Side PHP (SSR / OOP / MVC)
+Gunakan server bawaan PHP dari root repositori:
 ```bash
 php -S localhost:8000
 ```
 Buka peramban pada:
-- `http://localhost:8000/backend/` — Halaman utama SSR dengan rendering OOP.
-- `http://localhost:8000/backend/?kategori=Makanan` — Filter kategori via query string.
-- `http://localhost:8000/backend/?q=kopi` — Pencarian kata kunci via query string.
+- `http://localhost:8000/backend/` — Halaman utama MVC (daftar menu).
+- `http://localhost:8000/backend/?kategori=Makanan` — Filter kategori via Controller.
+- `http://localhost:8000/backend/?q=kopi` — Pencarian kata kunci via Controller.
+- `http://localhost:8000/backend/?action=show&id=1` — Detail item via method `show()`.
 
 #### 2. Week 2 s/d Week 4 — Client-Side SPA (Fetch API)
 Jalankan server dari root proyek untuk mengakses antarmuka klien:
@@ -602,10 +699,11 @@ Buka peramban pada alamat: `http://localhost:8000/backend/api.php` atau `http://
 
 ## Konvensi Kode & Standar Rekayasa Perangkat Lunak
 
-Seluruh pengembangan mematuhi standar teknis berikut untuk menjaga kematangan arsitektur menuju Week 7 (MVC):
+Seluruh pengembangan dari Week 2 hingga Week 7 mematuhi standar teknis berikut:
 
-1. **Separation of Concerns:** Pemisahan tegas antara lapisan data (`backend/data/`), lapisan entitas objek (`backend/classes/`), lapisan fungsi murni (`backend/helpers/`), dan lapisan presentasi antarmuka (`backend/index.php` dan `frontend/`).
-2. **Encapsulation & OOP Principles:** Seluruh properti class dideklarasikan `private` dan hanya dapat diakses melalui getter method yang terekspos secara publik. Logika bisnis (format harga, status item) dikapsulasikan di dalam method class.
-3. **Strict Typings & PHP 8 Practices:** Menggunakan deklarasi tipe data yang ketat pada seluruh argumen, return value, dan properti class (`int`, `string`, `bool`, `array`).
-4. **Penyaringan XSS Server-Side:** Seluruh data yang di-render ke HTML wajib dilindungi menggunakan fungsi `htmlspecialchars()` untuk mencegah celah keamanan injeksi skrip.
-5. **Disiplin Kode Bersih (*Clean Code*):** Tidak menyisakan komentar-komentar mati (*dead comments*), tidak menggunakan nama variabel samar, dan memastikan penamaan method/fungsi menggambarkan perilakunya secara eksplisit.
+1. **MVC Boundary yang Tegas:** Model tidak boleh menghasilkan HTML; View tidak boleh mengakses data secara langsung; Controller tidak boleh berisi logika domain. Setiap lapisan memiliki satu tanggung jawab tunggal.
+2. **Separation of Concerns:** Pemisahan tegas antara lapisan data (`backend/data/`), lapisan Model (`backend/models/`), lapisan Controller (`backend/controllers/`), lapisan View (`backend/views/`), lapisan entitas objek (`backend/classes/`), dan lapisan klien (`frontend/`).
+3. **Encapsulation & OOP Principles:** Seluruh properti class dideklarasikan `private` dan hanya dapat diakses melalui getter method yang terekspos secara publik. Logika bisnis dikapsulasikan di dalam method class.
+4. **Strict Typings & PHP 8 Practices:** Menggunakan deklarasi tipe data yang ketat pada seluruh argumen, return value, dan properti class (`int`, `string`, `bool`, `array`, `?Menu`).
+5. **Penyaringan XSS Server-Side:** Seluruh data yang di-render ke HTML wajib dilindungi menggunakan fungsi `htmlspecialchars()` untuk mencegah celah keamanan injeksi skrip.
+6. **Disiplin Kode Bersih (*Clean Code*):** Tidak menyisakan komentar mati (*dead comments*), tidak menggunakan nama variabel samar, dan memastikan penamaan method/fungsi menggambarkan perilakunya secara eksplisit.
