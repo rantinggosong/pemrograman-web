@@ -9,7 +9,6 @@ halo, kami dari tim pengembang yang mengembangkan project web pemesanan makanan 
 - [Gambaran Umum](#gambaran-umum)
 - [Arsitektur & Alur Data](#arsitektur--alur-data)
 - [Struktur Repositori](#struktur-repositori)
-- [Evolusi Teknis (Week 2 — Week 6)](#evolusi-teknis-week-2--week-6)
   - [Week 2: UI Semantik & Sistem Desain Responsif](#week-2-ui-semantik--sistem-desain-responsif)
     - [Task 01: Membangun Struktur HTML Semantik](#task-01-membangun-struktur-html-semantik)
     - [Task 02: Sistem Desain & Tata Letak Responsif](#task-02-sistem-desain--tata-letak-responsif)
@@ -116,12 +115,6 @@ tugas-pemrograman-web/
 ├── .gitignore                 # Filter berkas lingkungan dan editor
 └── README.md                  # Dokumentasi teknis proyek
 ```
-
----
-
-## Evolusi Teknis (Week 2 — Week 7)
-
-Setiap minggu perkuliahan berfokus pada 3 tugas utama (*Task 01, Task 02, dan Task 03*) yang dikerjakan secara sistematis.
 
 ---
 
