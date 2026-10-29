@@ -1,6 +1,6 @@
 # web pemesanan makanan & minuman cafe berbasis qr code
 
-Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pemesanan makanan dan minuman. Repositori ini merangkum evolusi teknis berkelanjutan dari antarmuka klien statis (Week 2), interaktivitas DOM (Week 3), integrasi REST API asinkron (Week 4), hingga pemrosesan server-side prosedural dengan PHP (Week 5), sebagai pijakan menuju Object-Oriented Programming (Week 6) dan Arsitektur MVC (Week 7).
+Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pemesanan makanan dan minuman. Repositori ini merangkum evolusi teknis berkelanjutan dari antarmuka klien statis (Week 2), interaktivitas DOM (Week 3), integrasi REST API asinkron (Week 4), pemrosesan server-side prosedural dengan PHP (Week 5), hingga implementasi penuh Object-Oriented Programming dengan desain berbasis Class dan Method (Week 6), sebagai pijakan menuju Arsitektur MVC (Week 7).
 
 ---
 
@@ -9,7 +9,7 @@ Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pe
 - [Gambaran Umum](#gambaran-umum)
 - [Arsitektur & Alur Data](#arsitektur--alur-data)
 - [Struktur Repositori](#struktur-repositori)
-- [Evolusi Teknis (Week 2 — Week 5)](#evolusi-teknis-week-2--week-5)
+- [Evolusi Teknis (Week 2 — Week 6)](#evolusi-teknis-week-2--week-6)
   - [Week 2: UI Semantik & Sistem Desain Responsif](#week-2-ui-semantik--sistem-desain-responsif)
     - [Task 01: Membangun Struktur HTML Semantik](#task-01-membangun-struktur-html-semantik)
     - [Task 02: Sistem Desain & Tata Letak Responsif](#task-02-sistem-desain--tata-letak-responsif)
@@ -26,6 +26,10 @@ Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pe
     - [Task 01: Inisialisasi Halaman & Variabel Server-Side](#task-01-inisialisasi-halaman--variabel-server-side)
     - [Task 02: Pemrosesan Data Berbasis Array & Fungsi Helper](#task-02-pemrosesan-data-berbasis-array--fungsi-helper)
     - [Task 03: Server-Side Rendering (SSR) Kartu Menu Dinamis](#task-03-server-side-rendering-ssr-kartu-menu-dinamis)
+  - [Week 6: Object-Oriented Programming — Class, Properties & Methods](#week-6-object-oriented-programming--class-properties--methods)
+    - [Task 01: Mendefinisikan Class & Menginisialisasi Object](#task-01-mendefinisikan-class--menginisialisasi-object)
+    - [Task 02: Properti Tertipe & Method Fungsional](#task-02-properti-tertipe--method-fungsional)
+    - [Task 03: Menghasilkan Konten Dinamis Melalui Object](#task-03-menghasilkan-konten-dinamis-melalui-object)
 - [Skema Data & Kontrak API](#skema-data--kontrak-api)
 - [Spesifikasi Manajemen Status (State Management)](#spesifikasi-manajemen-status-state-management)
 - [Panduan Pengembangan Lokal](#panduan-pengembangan-lokal)
@@ -84,15 +88,17 @@ tugas-pemrograman-web/
 │   ├── index.html             # Struktur semantik DOM dan konfigurasi Tailwind CSS
 │   └── script.js              # Logika bisnis klien, event listeners, dan Fetch API
 │
-├── backend/                   # Arsitektur Server-Side Procedural (Pencapaian Week 5)
+├── backend/                   # Arsitektur Server-Side (Pencapaian Week 5 & Week 6)
 │   ├── asset/                 # Aset visual untuk kebutuhan server lokal
+│   ├── classes/
+│   │   └── Menu.php           # Class Menu: typed properties, constructor, getter & methods
 │   ├── data/
 │   │   ├── menu.json          # Sumber data tiruan legacy JSON
 │   │   └── data_menu.php      # Master data array PHP terstruktur
 │   ├── helpers/
-│   │   └── functions.php      # Kumpulan fungsi murni (formatRupiah, saringMenu, badge)
+│   │   └── functions.php      # Kumpulan fungsi murni (formatRupiah, saringMenu)
 │   ├── api.php                # Endpoint REST API JSON untuk konsumsi klien
-│   └── index.php              # Server-Side Rendering (SSR) entrypoint utama
+│   └── index.php              # Server-Side Rendering (SSR) + OOP entrypoint utama
 │
 ├── material/                  # Materi dan panduan perkuliahan
 ├── .gitignore                 # Filter berkas lingkungan dan editor
@@ -101,7 +107,7 @@ tugas-pemrograman-web/
 
 ---
 
-## Evolusi Teknis (Week 2 — Week 5)
+## Evolusi Teknis (Week 2 — Week 6)
 
 Setiap minggu perkuliahan berfokus pada 3 tugas utama (*Task 01, Task 02, dan Task 03*) yang dikerjakan secara sistematis.
 
@@ -408,6 +414,103 @@ Menghasilkan antarmuka kartu menu secara dinamis menggunakan perulangan `foreach
 
 ---
 
+### Week 6: Object-Oriented Programming — Class, Properties & Methods
+
+Fokus Week 6 adalah merefaktor lapisan data dan presentasi dari paradigma prosedural ke paradigma berorientasi objek (*Object-Oriented Programming*), mengikuti prinsip *encapsulation* dan *single responsibility*.
+
+#### Task 01: Mendefinisikan Class & Menginisialisasi Object
+Membuat entitas `Menu` sebagai sebuah Class PHP yang terstruktur dan bertipe tegas:
+- Mendefinisikan Class `Menu` dengan 6 properti privat bertipe (`int` dan `string`).
+- Mengimplementasikan `__construct()` dengan 6 parameter bertipe untuk menjamin integritas data saat instansiasi.
+- Mengonversi seluruh array data menu prosedural menjadi kumpulan objek `Menu` menggunakan `array_map()`.
+
+```php
+class Menu
+{
+    private int $id;
+    private string $nama;
+    private string $gambar;
+    private int $harga;
+    private string $kategori;
+    private string $status;
+
+    public function __construct(
+        int $id,
+        string $nama,
+        string $gambar,
+        int $harga,
+        string $kategori,
+        string $status
+    ) {
+        $this->id = $id;
+        $this->nama = $nama;
+        $this->gambar = $gambar;
+        $this->harga = $harga;
+        $this->kategori = $kategori;
+        $this->status = $status;
+    }
+}
+```
+
+#### Task 02: Properti Tertipe & Method Fungsional
+Menambahkan seluruh lapisan akses dan logika bisnis sebagai method yang terenkapsulasi di dalam class:
+- **Getter Methods:** `getId()`, `getNama()`, `getGambar()`, `getHarga()`, `getKategori()`, `getStatus()` untuk akses properti privat yang aman.
+- **Computed Methods:** `getHargaFormatted(): string` untuk format mata uang, menggantikan pemanggilan fungsi global `formatRupiah()`.
+- **Boolean State Methods:** `isBestSeller()`, `isPromo()`, dan `isHabis()` sebagai query status item yang ekspresif dan mudah dibaca.
+- **Profile Method:** `getProfile(): array` mengembalikan ringkasan data terstruktur dari object.
+
+```php
+public function getHargaFormatted(): string
+{
+    return 'Rp ' . number_format($this->harga, 0, ',', '.');
+}
+
+public function isBestSeller(): bool
+{
+    return strtolower($this->status) === 'best seller';
+}
+
+public function getProfile(): array
+{
+    return [
+        'id'       => $this->id,
+        'nama'     => $this->nama,
+        'kategori' => $this->kategori,
+        'harga'    => $this->getHargaFormatted(),
+        'status'   => $this->status,
+    ];
+}
+```
+
+#### Task 03: Menghasilkan Konten Dinamis Melalui Object
+Memanfaatkan method `renderKartu(): string` untuk menghasilkan seluruh markup HTML kartu produk dari dalam object itu sendiri — memisahkan logika presentasi kartu dari template halaman:
+- Badge status (`Best Seller`, `Promo`, `Habis`) dihasilkan secara kondisional oleh method object menggunakan `isBestSeller()`, `isPromo()`, dan `isHabis()`.
+- Item dengan status `Habis` secara otomatis menonaktifkan tombol dan menerapkan efek visual `opacity-60`.
+- Template halaman `backend/index.php` menjadi bersih — loop hanya memanggil satu method, bukan memanipulasi array secara langsung.
+
+```php
+$objectMenu = array_map(function (array $item): Menu {
+    return new Menu(
+        $item['id'],
+        $item['nama'],
+        $item['gambar'],
+        $item['harga'],
+        $item['kategori'],
+        $item['status']
+    );
+}, $menuTampil);
+```
+
+```php
+<div id="menu-container" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 w-full max-w-5xl px-2 md:px-0">
+    <?php foreach ($objectMenu as $menu): ?>
+        <?= $menu->renderKartu(); ?>
+    <?php endforeach; ?>
+</div>
+```
+
+---
+
 ## Skema Data & Kontrak API
 
 Berkas data tiruan dan master data PHP mengikuti standar representasi entitas berikut:
@@ -474,18 +577,17 @@ Pada mode Client-Side (Week 4), antarmuka beroperasi menyerupai mesin status ter
 
 ### Menjalankan Proyek Secara Lokal
 
-#### 1. Menjalankan Server-Side Rendering (Week 5 — PHP SSR)
-Gunakan server bawaan PHP untuk menjalankan aplikasi backend:
+#### 1. Week 5 & Week 6 — Server-Side Rendering + OOP (PHP)
+Gunakan server bawaan PHP untuk menjalankan aplikasi backend dari root repositori:
 ```bash
-# Jalankan server dari root repositori
 php -S localhost:8000
-
-# Atau jalankan langsung mengarah ke folder backend
-php -S localhost:8000 -t backend/
 ```
-Buka peramban pada alamat: `http://localhost:8000/backend/` atau `http://localhost:8000/`
+Buka peramban pada:
+- `http://localhost:8000/backend/` — Halaman utama SSR dengan rendering OOP.
+- `http://localhost:8000/backend/?kategori=Makanan` — Filter kategori via query string.
+- `http://localhost:8000/backend/?q=kopi` — Pencarian kata kunci via query string.
 
-#### 2. Menjalankan Client-Side SPA (Week 2 s/d Week 4 — Fetch API)
+#### 2. Week 2 s/d Week 4 — Client-Side SPA (Fetch API)
 Jalankan server dari root proyek untuk mengakses antarmuka klien:
 ```bash
 php -S localhost:8000
@@ -500,9 +602,10 @@ Buka peramban pada alamat: `http://localhost:8000/backend/api.php` atau `http://
 
 ## Konvensi Kode & Standar Rekayasa Perangkat Lunak
 
-Untuk mempermudah kolaborasi dan menjaga kematangan arsitektur proyek menuju Week 6 (OOP) dan Week 7 (MVC), seluruh pengembangan wajib mematuhi standar berikut:
+Seluruh pengembangan mematuhi standar teknis berikut untuk menjaga kematangan arsitektur menuju Week 7 (MVC):
 
-1. **Separation of Concerns:** Pemisahan tegas antara lapisan data (`backend/data/`), lapisan logika fungsi murni (`backend/helpers/`), dan lapisan presentasi antarmuka (`backend/index.php` dan `frontend/`).
-2. **Strict Typings & PHP 8 Practices:** Menggunakan deklarasi tipe data yang ketat pada argumen dan *return value* fungsi helper (`int`, `string`, `array`).
-3. **Penyaringan XSS Server-Side:** Seluruh data yang di-render ke HTML wajib dilindungi menggunakan fungsi `htmlspecialchars()` untuk mencegah celah keamanan injeksi skrip.
-4. **Disiplin Kode Bersih (*Clean Code*):** Tidak menyisakan komentar-komentar mati (*dead comments*), tidak menggunakan nama variabel samar, dan memastikan penamaan fungsi menggambarkan fungsinya secara eksplisit.
+1. **Separation of Concerns:** Pemisahan tegas antara lapisan data (`backend/data/`), lapisan entitas objek (`backend/classes/`), lapisan fungsi murni (`backend/helpers/`), dan lapisan presentasi antarmuka (`backend/index.php` dan `frontend/`).
+2. **Encapsulation & OOP Principles:** Seluruh properti class dideklarasikan `private` dan hanya dapat diakses melalui getter method yang terekspos secara publik. Logika bisnis (format harga, status item) dikapsulasikan di dalam method class.
+3. **Strict Typings & PHP 8 Practices:** Menggunakan deklarasi tipe data yang ketat pada seluruh argumen, return value, dan properti class (`int`, `string`, `bool`, `array`).
+4. **Penyaringan XSS Server-Side:** Seluruh data yang di-render ke HTML wajib dilindungi menggunakan fungsi `htmlspecialchars()` untuk mencegah celah keamanan injeksi skrip.
+5. **Disiplin Kode Bersih (*Clean Code*):** Tidak menyisakan komentar-komentar mati (*dead comments*), tidak menggunakan nama variabel samar, dan memastikan penamaan method/fungsi menggambarkan perilakunya secara eksplisit.

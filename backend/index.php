@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/data/data_menu.php';
 require_once __DIR__ . '/helpers/functions.php';
+require_once __DIR__ . '/classes/Menu.php';
 
 $namaToko = 'Menu';
 $sloganToko = 'Pesan langsung dari meja kamu';
@@ -11,6 +12,17 @@ $kataKunci = trim($_GET['q'] ?? '');
 $menuTampil = saringMenu($daftarMenu, $kategoriAktif, $kataKunci);
 $totalItemTampil = hitungTotalMenu($menuTampil);
 $daftarKategori = dapatkanDaftarKategori($daftarMenu);
+
+$objectMenu = array_map(function (array $item): Menu {
+    return new Menu(
+        $item['id'],
+        $item['nama'],
+        $item['gambar'],
+        $item['harga'],
+        $item['kategori'],
+        $item['status']
+    );
+}, $menuTampil);
 
 ?>
 <!DOCTYPE html>
@@ -66,22 +78,8 @@ $daftarKategori = dapatkanDaftarKategori($daftarMenu);
             </div>
 
             <div id="menu-container" class="<?= $totalItemTampil === 0 ? 'hidden' : 'grid'; ?> grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 w-full max-w-5xl px-2 md:px-0">
-                <?php foreach ($menuTampil as $item): ?>
-                    <div class="flex flex-col bg-white/30 border border-[#1A110A]/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm">
-                        <div class="bg-[#1A110A] p-2 md:p-4">
-                            <div class="w-full aspect-square rounded-xl overflow-hidden shadow-inner">
-                                <img src="<?= htmlspecialchars($item['gambar']); ?>" 
-                                     alt="<?= htmlspecialchars($item['nama']); ?>" 
-                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-center p-3 md:p-6 text-center">
-                            <h3 class="font-serif text-base md:text-2xl font-bold text-[#1A110A] mb-3 md:mb-6 leading-tight"><?= htmlspecialchars($item['nama']); ?></h3>
-                            <button class="w-full py-1.5 px-2 md:py-3 md:px-4 text-xs md:text-base bg-transparent border md:border-2 border-[#1A110A]/30 text-[#1A110A] font-semibold rounded-lg md:rounded-xl hover:bg-[#1A110A] hover:text-[#D5B99F] transition-all duration-300">
-                                Order Now (<?= formatRupiah($item['harga']); ?>)
-                            </button>
-                        </div>
-                    </div>
+                <?php foreach ($objectMenu as $menu): ?>
+                    <?= $menu->renderKartu(); ?>
                 <?php endforeach; ?>
             </div>
 
