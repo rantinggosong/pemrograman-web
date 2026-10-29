@@ -1,6 +1,6 @@
 # web pemesanan makanan & minuman cafe berbasis qr code
 
-Dokumentasi komprehensif arsitektur dan rekayasa perangkat lunak aplikasi web pemesanan makanan dan minuman. Repositori ini merangkum evolusi teknis berkelanjutan dari antarmuka klien statis (Week 2), interaktivitas DOM (Week 3), integrasi REST API asinkron (Week 4), pemrosesan server-side prosedural dengan PHP (Week 5), hingga implementasi penuh Object-Oriented Programming dengan desain berbasis Class dan Method (Week 6), sebagai pijakan menuju Arsitektur MVC (Week 7).
+halo, kami dari tim pengembang yang mengembangkan project web pemesanan makanan dan minuman berbasis QR code, dan ini adalah dokumentasi dari hasil yang kami kerjakan selama setengah semester
 
 ---
 
