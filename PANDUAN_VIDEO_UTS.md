@@ -19,35 +19,42 @@ Panduan ini adalah dokumen standar operasional (*Standard Operating Procedure*) 
 
 ## 2. Roadmap Presentasi & Matriks Pembagian Tugas
 
+### 2.1 Alur Video (Pipeline Ringkas)
+
 ```mermaid
-flowchart TD
-    subgraph S1["Fase 1: Setup & Client-Side UI (Anggota 1)"]
-        W2["Pekan 2: Semantic HTML & Tailwind CSS\n(Task 01: Semantik | Task 02: Responsive Grid | Task 03: Desain Polish)"]
-        W3["Pekan 3: Arsitektur DOM & Interaktivitas\n(Task 01: DOM Selection | Task 02: Event Listeners | Task 03: Dynamic Filter & Pagination)"]
-    end
-
-    subgraph S2["Fase 2: Asynchronous API & Server Core (Anggota 2)"]
-        W4["Pekan 4: REST API & Manajemen Status Asinkron\n(Task 01: Fetch Async/Await | Task 02: Dynamic JSON Card | Task 03: API State Loading/Empty)"]
-        W5["Pekan 5: Procedural PHP & Server-Side Foundation\n(Task 01: Server-Side Query | Task 02: Data Array & Helpers | Task 03: Server Rendering)"]
-    end
-
-    subgraph S3["Fase 3: OOP, Enterprise MVC & Closing (Anggota 3 / Lead)"]
-        INIT["Opening: Terminal Git Clone & Server Spin-up"]
-        W6["Pekan 6: Object-Oriented Programming\n(Task 01: Blueprint Class Menu | Task 02: Strict Typing & Getters | Task 03: Encapsulated Card)"]
-        W7["Pekan 7: Model-View-Controller Architecture\n(Task 01: Folder MVC & Router | Task 02: MenuController index/show | Task 03: Model-View Triad)"]
-        CLOSE["Closing: Matriks Pembagian Tugas Anggota"]
-    end
-
-    INIT --> W2 --> W3 --> W4 --> W5 --> W6 --> W7 --> CLOSE
+flowchart LR
+    A["01. Setup & Intro\n(Git Clone & Run)"] --> B["02. Frontend\n(Pekan 2 - 3)"]
+    B --> C["03. API & PHP Dasar\n(Pekan 4 - 5)"]
+    C --> D["04. OOP & MVC\n(Pekan 6 - 7)"]
+    D --> E["05. Penutup\n(Matriks Tugas)"]
 ```
 
-### Matriks Kepemilikan Kode & Output Konsisten Tiap Anggota
+### 2.2 Tabel Pembagian Tugas & Output
 
-| Anggota | Peran / Bidang | Pekan & Task | Berkas Tanggung Jawab | Output Nyata yang Dijalankan di Browser |
+| Anggota | Peran | Cakupan Pekan | Berkas Kunci | Fokus Live Demo di Browser |
 | :--- | :--- | :--- | :--- | :--- |
-| **Anggota 1** | **Frontend UI & DOM Engineer** | **Pekan 2 & 3**<br>(6 Task Akademis) | `frontend/index.html`<br>`frontend/script.js` *(DOM & Event)* | 1. Buka `http://localhost:8000/frontend/index.html`<br>2. Toggle Inspect Element (Responsif Desktop 3 kolom $\leftrightarrow$ Mobile 2 kolom)<br>3. Klik filter tombol "Minuman" (kartu menyaring otomatis)<br>4. Ketik pencarian "kopi" lalu Enter $\rightarrow$ hapus pencarian kembali normal<br>5. Klik tombol "Lihat Lebih Banyak" (paginasi dinamis bertambah +4 kartu) |
-| **Anggota 2** | **API & Server-Side Core Engineer** | **Pekan 4 & 5**<br>(6 Task Akademis) | `frontend/script.js` *(Fetch API)*<br>`backend/data/data_menu.php`<br>`backend/helpers/functions.php`<br>`backend/api.php` | 1. Buka `http://localhost:8000/backend/api.php` (menampilkan data JSON REST API murni)<br>2. Buka `http://localhost:8000/backend/api.php?kategori=Makanan` (menampilkan filter JSON dari server)<br>3. Demonstrasikan Helper `formatRupiah()` dan sanitasi XSS `htmlspecialchars()`<br>4. Uji Empty State di frontend: ketik "zzzzz" $\rightarrow$ muncul pesan *"Yang kamu cari tidak ditemukan"* |
-| **Anggota 3 (Lead)** | **Lead Architect, OOP & MVC Engineer** | **Pekan 6 & 7**<br>(6 Task Akademis + Setup & Penutup) | `backend/classes/Menu.php`<br>`backend/index.php`<br>`backend/models/MenuModel.php`<br>`backend/controllers/MenuController.php`<br>`backend/views/menu/` | 1. Layar awal: Terminal `git clone` & jalankan server `php -S localhost:8000`<br>2. Buka `http://localhost:8000/backend/index.php` (Katalog Server-Side MVC murni)<br>3. Filter server via URL: `http://localhost:8000/backend/?kategori=Minuman`<br>4. Rute detail via Controller: `http://localhost:8000/backend/?action=show&id=1` (menampilkan View detail)<br>5. Tampilkan slide/tabel matriks kontribusi akhir video |
+| **Anggota 1** | Frontend & DOM Engineer | **Pekan 2 & 3** | `frontend/index.html`<br>`frontend/script.js` | • Responsivitas (Desktop 3 kolom $\leftrightarrow$ HP 2 kolom)<br>• Filter kategori & pencarian realtime<br>• Paginasi dinamis (+4 kartu) |
+| **Anggota 2** | API & Core PHP Engineer | **Pekan 4 & 5** | `frontend/script.js`<br>`backend/data/`<br>`backend/helpers/`<br>`backend/api.php` | • Respon REST API JSON di `backend/api.php`<br>• Filter parameter JSON `?kategori=Makanan`<br>• Helper `formatRupiah()` & Empty State UI |
+| **Anggota 3 (Lead)** | Lead Architect, OOP & MVC | **Pekan 6 & 7** | `backend/classes/Menu.php`<br>`backend/index.php`<br>`backend/models/`<br>`backend/controllers/`<br>`backend/views/` | • Git clone & spin-up server PHP di terminal<br>• Katalog MVC di `backend/index.php`<br>• Rute detail Controller `?action=show&id=1`<br>• Penanganan ID salah `?action=show&id=999` |
+
+### 2.3 Rincian Tugas & Live Output per Anggota
+
+#### 👤 Anggota 1 — Frontend UI & Interaktivitas DOM (Pekan 2 & 3)
+* **Pekan 2:** Struktur HTML5 semantik (`<main>`), tema warna Tailwind CSS (*earthy warm*), grid responsif (2 kolom HP / 3 kolom Desktop).
+* **Pekan 3:** DOM Selection (`getElementById`), Event Listener tombol kategori & search bar, paginasi dinamis (*Lihat Lebih Banyak*).
+* **Live Demo:** Buka `http://localhost:8000/frontend/index.html` $\rightarrow$ uji responsif (F12) $\rightarrow$ klik filter *"Minuman"* $\rightarrow$ ketik search *"kopi"* $\rightarrow$ klik *"Lihat Lebih Banyak"*.
+
+#### 👤 Anggota 2 — Integrasi REST API & PHP Prosedural (Pekan 4 & 5)
+* **Pekan 4:** Pemrograman asinkron (`fetch()`, `async/await`), parsing JSON ke DOM, manajemen status (*Loading, Success, Empty State*).
+* **Pekan 5:** Master data 30 item array asosiatif (`data_menu.php`), fungsi helper murni (`formatRupiah()`, `saringMenuByKategori()`), konsep SSR.
+* **Live Demo:** Buka `http://localhost:8000/backend/api.php` (tampilkan data JSON) $\rightarrow$ buka `?kategori=Makanan` $\rightarrow$ uji Empty State di frontend dengan mengetik kata acak.
+
+#### 👤 Anggota 3 (Lead) — OOP, Arsitektur MVC & Integrasi (Pekan 6 & 7)
+* **Opening:** Layar terminal `git clone`, periksa `git log`, inisialisasi server `php -S localhost:8000`.
+* **Pekan 6:** Blueprint Class `Menu`, enkapsulasi properti `private`, strict typing PHP 8, getter methods, dan dynamic card render (`renderKartu()`).
+* **Pekan 7:** Arsitektur MVC (*Separation of Concerns*), Front Controller Router (`index.php`), Controller (`index()` & `show()`), Model query, View template murni.
+* **Live Demo:** Buka `http://localhost:8000/backend/index.php` (katalog MVC) $\rightarrow$ uji filter `?kategori=Minuman` $\rightarrow$ rute detail `?action=show&id=1` $\rightarrow$ rute error `?action=show&id=999`.
+* **Closing:** Paparkan rekapitulasi kontribusi anggota kelompok.
 
 ---
 
@@ -65,7 +72,7 @@ flowchart TD
   5. Buka editor: `code .`
   6. Jalankan server lokal: `php -S localhost:8000`
 * **Naskah Suara (Anggota 3):**
-  > *"Assalamu’alaikum warahmatullahi wabarakatuh. Selamat pagi/siang kepada Bapak Dosen Rezha Rivai dan rekan-rekan sekalian. Kami dari tim pengembang kelas Web J ingin mempresentasikan pengerjaan **Tugas Pengganti UTS Pemrograman Web** dengan tema proyek: **Web Pemesanan Makanan & Minuman Cafe Berbasis QR Code**.*
+  > *"Assalamu’alaikum warahmatullahi wabarakatuh. Kami dari tim pengembang kelas Web J ingin mempresentasikan pengerjaan **Tugas Pengganti UTS Pemrograman Web** dengan tema proyek: **Web Pemesanan Makanan & Minuman Cafe Berbasis QR Code**.*
   > 
   > *Sesuai ketentuan instruksi tugas, rekaman kami awali dengan pembuktian inisialisasi lingkungan melalui `git clone` repositori GitHub resmi kami secara live di terminal. Melalui perintah `git log`, dapat terlihat catatan commit bertahap yang membuktikan rekam jejak pengerjaan kami dari Pekan 2 hingga Pekan 7.*
   > 
