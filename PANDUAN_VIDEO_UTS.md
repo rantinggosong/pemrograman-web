@@ -29,31 +29,51 @@ flowchart LR
     D --> E["05. Penutup\n(Matriks Tugas)"]
 ```
 
-### 2.2 Tabel Pembagian Tugas & Output
+### 2.2 Tabel Pembagian Tugas & Baris Kode Kunci
 
-| Anggota | Peran | Cakupan Pekan | Berkas Kunci | Fokus Live Demo di Browser |
+| Anggota | Peran | Pekan | Berkas & Baris Kode yang Dibuka di VS Code | Fokus Live Demo di Browser |
 | :--- | :--- | :--- | :--- | :--- |
-| **Anggota 1** | Frontend & DOM Engineer | **Pekan 2 & 3** | `frontend/index.html`<br>`frontend/script.js` | • Responsivitas (Desktop 3 kolom $\leftrightarrow$ HP 2 kolom)<br>• Filter kategori & pencarian realtime<br>• Paginasi dinamis (+4 kartu) |
-| **Anggota 2** | API & Core PHP Engineer | **Pekan 4 & 5** | `frontend/script.js`<br>`backend/data/`<br>`backend/helpers/`<br>`backend/api.php` | • Respon REST API JSON di `backend/api.php`<br>• Filter parameter JSON `?kategori=Makanan`<br>• Helper `formatRupiah()` & Empty State UI |
-| **Anggota 3 (Lead)** | Lead Architect, OOP & MVC | **Pekan 6 & 7** | `backend/classes/Menu.php`<br>`backend/index.php`<br>`backend/models/`<br>`backend/controllers/`<br>`backend/views/` | • Git clone & spin-up server PHP di terminal<br>• Katalog MVC di `backend/index.php`<br>• Rute detail Controller `?action=show&id=1`<br>• Penanganan ID salah `?action=show&id=999` |
+| **Anggota 1** | Frontend & DOM Engineer | **Pekan 2 & 3** | • `frontend/index.html` (Baris 12–28, 31–47, 64–66)<br>• `frontend/script.js` (Baris 9–16, 17–53, 77–124) | • Responsivitas (Desktop 3 kolom $\leftrightarrow$ HP 2 kolom)<br>• Filter kategori & pencarian realtime<br>• Paginasi dinamis (+4 kartu) |
+| **Anggota 2** | API & Core PHP Engineer | **Pekan 4 & 5** | • `frontend/script.js` (Baris 132–158)<br>• `backend/data/data_menu.php` (Baris 1–25)<br>• `backend/helpers/functions.php` (Baris 3–23)<br>• `backend/api.php` (Baris 1–13) | • Respon REST API JSON di `backend/api.php`<br>• Filter parameter JSON `?kategori=Makanan`<br>• Helper `formatRupiah()` & Empty State UI |
+| **Anggota 3 (Lead)** | Lead Architect, OOP & MVC | **Pekan 6 & 7** | • `backend/classes/Menu.php` (Baris 3–26, 28–76, 89–124)<br>• `backend/index.php` (Baris 1–12)<br>• `backend/controllers/MenuController.php` (Baris 14–38)<br>• `backend/models/MenuModel.php` (Baris 17–49)<br>• `backend/views/menu/show.php` (Baris 36–63) | • Git clone & spin-up server PHP di terminal<br>• Katalog MVC di `backend/index.php`<br>• Rute detail Controller `?action=show&id=1`<br>• Penanganan ID salah `?action=show&id=999` |
 
-### 2.3 Rincian Tugas & Live Output per Anggota
+### 2.3 Rincian Tugas & Baris Kode per Anggota
 
 #### 👤 Anggota 1 — Frontend UI & Interaktivitas DOM (Pekan 2 & 3)
-* **Pekan 2:** Struktur HTML5 semantik (`<main>`), tema warna Tailwind CSS (*earthy warm*), grid responsif (2 kolom HP / 3 kolom Desktop).
-* **Pekan 3:** DOM Selection (`getElementById`), Event Listener tombol kategori & search bar, paginasi dinamis (*Lihat Lebih Banyak*).
+* **Pekan 2 (`frontend/index.html`):**
+  * `Baris 12–28`: Konfigurasi tema Tailwind CSS kustom (warna *earthy warm* & font).
+  * `Baris 31–47`: Struktur HTML5 semantik (`<main>`, judul, search input, filter bar, kontainer grid responsive `grid-cols-2 lg:grid-cols-3`).
+  * `Baris 64–66`: Komponen tombol paginasi `#navigasi`.
+* **Pekan 3 (`frontend/script.js`):**
+  * `Baris 9–16`: Penyeleksian DOM element (`getElementById`, `querySelectorAll`).
+  * `Baris 17–53`: Fungsi `renderMenu()` & template dynamic HTML card.
+  * `Baris 77–108`: Event listener tombol filter kategori dan paginasi progresif (+4 kartu).
+  * `Baris 110–124`: Event listener pencarian input realtime (`keyup` & `input`).
 * **Live Demo:** Buka `http://localhost:8000/frontend/index.html` $\rightarrow$ uji responsif (F12) $\rightarrow$ klik filter *"Minuman"* $\rightarrow$ ketik search *"kopi"* $\rightarrow$ klik *"Lihat Lebih Banyak"*.
 
 #### 👤 Anggota 2 — Integrasi REST API & PHP Prosedural (Pekan 4 & 5)
-* **Pekan 4:** Pemrograman asinkron (`fetch()`, `async/await`), parsing JSON ke DOM, manajemen status (*Loading, Success, Empty State*).
-* **Pekan 5:** Master data 30 item array asosiatif (`data_menu.php`), fungsi helper murni (`formatRupiah()`, `saringMenuByKategori()`), konsep SSR.
-* **Live Demo:** Buka `http://localhost:8000/backend/api.php` (tampilkan data JSON) $\rightarrow$ buka `?kategori=Makanan` $\rightarrow$ uji Empty State di frontend dengan mengetik kata acak.
+* **Pekan 4 (`frontend/script.js`):**
+  * `Baris 132–158`: Fungsi `ambilDataMenu()` dengan `async/await` dan `fetch('../backend/menu.json')`.
+  * `Baris 133–138 & 151–157`: Siklus status API (*Loading State* spinner, *Success State*, dan *Error State*).
+  * `Baris 54–59`: Logika *Empty State* ketika hasil pencarian kosong.
+* **Pekan 5 (`backend/data/` & `backend/helpers/`):**
+  * `backend/data/data_menu.php` (`Baris 1–25`): Master data 30 item dalam array asosiatif multidimensi.
+  * `backend/helpers/functions.php` (`Baris 3–23`): Fungsi helper murni: `formatRupiah()`, `saringMenu()`, `saringMenuByKategori()`.
+  * `backend/api.php` (`Baris 1–13`): Endpoint REST API JSON berstandar modern (`header('Content-Type: application/json')` & `json_encode`).
+* **Live Demo:** Buka `http://localhost:8000/backend/api.php` $\rightarrow$ uji filter `?kategori=Makanan` $\rightarrow$ uji Empty State di frontend dengan mengetik kata acak.
 
 #### 👤 Anggota 3 (Lead) — OOP, Arsitektur MVC & Integrasi (Pekan 6 & 7)
 * **Opening:** Layar terminal `git clone`, periksa `git log`, inisialisasi server `php -S localhost:8000`.
-* **Pekan 6:** Blueprint Class `Menu`, enkapsulasi properti `private`, strict typing PHP 8, getter methods, dan dynamic card render (`renderKartu()`).
-* **Pekan 7:** Arsitektur MVC (*Separation of Concerns*), Front Controller Router (`index.php`), Controller (`index()` & `show()`), Model query, View template murni.
-* **Live Demo:** Buka `http://localhost:8000/backend/index.php` (katalog MVC) $\rightarrow$ uji filter `?kategori=Minuman` $\rightarrow$ rute detail `?action=show&id=1` $\rightarrow$ rute error `?action=show&id=999`.
+* **Pekan 6 (`backend/classes/Menu.php`):**
+  * `Baris 3–26`: Blueprint Class `Menu`, 6 properti `private`, dan konstruktor `__construct()`.
+  * `Baris 28–56 & 58–76`: Getter methods dan helper method bisnis (`getHargaFormatted()`, `isBestSeller()`, dll).
+  * `Baris 89–124`: Method enkapsulasi rendering kartu `renderKartu(): string`.
+* **Pekan 7 (`backend/` MVC Core):**
+  * `backend/index.php` (`Baris 1–12`): Front Controller Router yang membaca `?action=...`.
+  * `backend/controllers/MenuController.php` (`Baris 14–38`): Method kendali `index()` dan `show()`.
+  * `backend/models/MenuModel.php` (`Baris 17–49`): Layer Model query data & pembungkusan ke objek `Menu`.
+  * `backend/views/menu/show.php` (`Baris 36–63`): Template view detail produk terisolasi & penanganan kondisi 404 item kosong.
+* **Live Demo:** Buka `http://localhost:8000/backend/index.php` (katalog MVC) $\rightarrow$ filter server `?kategori=Minuman` $\rightarrow$ rute detail `?action=show&id=1` $\rightarrow$ rute error `?action=show&id=999`.
 * **Closing:** Paparkan rekapitulasi kontribusi anggota kelompok.
 
 ---
@@ -84,10 +104,17 @@ flowchart LR
 
 ### SEGMENT 2: PEKAN 2 & 3 — FRONTEND UI & INTERAKSI DOM (Anggota 1)
 * **Durasi:** ~3.5 Menit
-* **Panduan Aksi Layar:**
-  1. Di VS Code, buka `frontend/index.html`. Sorot tag semantik `<main>`, grid responsif Tailwind `grid-cols-2 lg:grid-cols-3`, dan tombol filter di `#filter-container`.
-  2. Di VS Code, buka `frontend/script.js`. Sorot penyeleksian DOM `getElementById`, event listener tombol kategori, dan tombol paginasi `#navigasi`.
-  3. Buka browser pada alamat: `http://localhost:8000/frontend/index.html`.
+* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
+  1. Buka file `frontend/index.html`:
+     - Sorot **Baris 12–28**: Konfigurasi Tailwind CSS (palet warna kustom *earthy warm* & font ganda Playfair/Plus Jakarta Sans).
+     - Sorot **Baris 31–47**: Struktur Semantic HTML5 (`<main>`, search input `#input-pencarian`, filter bar `#filter-container`, dan grid `grid-cols-2 lg:grid-cols-3`).
+     - Sorot **Baris 64–66**: Komponen tombol paginasi dinamis (`#navigasi`).
+  2. Buka file `frontend/script.js`:
+     - Sorot **Baris 9–16**: Penyeleksian DOM element (`getElementById` & `querySelectorAll`).
+     - Sorot **Baris 17–53**: Fungsi `renderMenu()` dan template literal kartu produk dinamis.
+     - Sorot **Baris 77–108**: Event listener tombol kategori filter dan mesin paginasi progresif (+4 kartu per klik).
+     - Sorot **Baris 110–124**: Event listener realtime search (`keyup` untuk Enter & `input` untuk reset).
+  3. Buka peramban pada alamat: `http://localhost:8000/frontend/index.html`.
   4. Tekan tombol `F12` (Inspect Element) $\rightarrow$ aktifkan toggle device emulator (layar HP: terlihat 2 kolom), lalu kembalikan ke layar penuh desktop (terlihat 3 kolom).
   5. Klik tombol kategori **"Minuman"** pada bilah filter $\rightarrow$ perlihatkan daftar menu tersaring seketika.
   6. Ketikkan kata **"kopi"** pada search bar lalu tekan `Enter` $\rightarrow$ kartu menu tersaring. Hapus teks pencarian $\rightarrow$ kembali normal.
@@ -113,13 +140,22 @@ flowchart LR
 
 ### SEGMENT 3: PEKAN 4 & 5 — REST API ASINKRON & DASAR SERVER-SIDE PHP (Anggota 2)
 * **Durasi:** ~3.5 Menit
-* **Panduan Aksi Layar:**
-  1. Di VS Code, buka `frontend/script.js`. Sorot fungsi `ambilDataMenu()` dengan blok `async/await`, pemanggilan `fetch('../backend/menu.json')`, serta manajemen status: `#loading-state`, `#error-state`, dan `#empty-state`.
-  2. Di VS Code, buka `backend/data/data_menu.php`. Perlihatkan array asosiatif multidimensi master 30 item menu.
-  3. Buka `backend/helpers/functions.php`. Sorot fungsi murni `formatRupiah()` dan `saringMenuByKategori()`.
-  4. Buka tab baru di browser: `http://localhost:8000/backend/api.php` $\rightarrow$ perlihatkan struktur data JSON yang bersih dengan header `Content-Type: application/json`.
-  5. Coba tambahkan filter query di URL: `http://localhost:8000/backend/api.php?kategori=Makanan` $\rightarrow$ perlihatkan JSON yang dihasilkan tersaring khusus kategori Makanan.
-  6. Kembali ke tab frontend, ketikkan teks acak pada search bar: "zzzz" lalu tekan `Enter` $\rightarrow$ demonstrasikan kemunculan pesan Empty State: *"Yang kamu cari tidak ditemukan"*.
+* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
+  1. Buka file `frontend/script.js`:
+     - Sorot **Baris 132–158**: Fungsi `ambilDataMenu()` berbasis `async/await` dan `fetch('../backend/menu.json')`.
+     - Sorot **Baris 133–138**: State Management saat *Loading State* (spinner aktif).
+     - Sorot **Baris 54–59**: Penanganan *Empty State* saat hasil pencarian tidak ditemukan.
+     - Sorot **Baris 151–157**: Blok `catch` penanganan *Error State* jika terjadi kegagalan jaringan.
+  2. Buka file `backend/data/data_menu.php`:
+     - Sorot **Baris 1–25**: Struktur data array asosiatif multidimensi master 30 item menu.
+  3. Buka file `backend/helpers/functions.php`:
+     - Sorot **Baris 3–6**: Fungsi murni prosedural `formatRupiah(int $nominal)`.
+     - Sorot **Baris 8–23**: Fungsi pemfilteran `saringMenu()` dan `saringMenuByKategori()`.
+  4. Buka tab baru di peramban: `http://localhost:8000/backend/api.php`:
+     - Buka `backend/api.php` di VS Code (Sorot **Baris 1–13** untuk header JSON dan `json_encode`).
+     - Perlihatkan keluaran JSON terstruktur dengan `Content-Type: application/json`.
+  5. Tambahkan query filter di peramban: `http://localhost:8000/backend/api.php?kategori=Makanan` $\rightarrow$ perlihatkan JSON tersaring khusus makanan.
+  6. Kembali ke tab frontend, ketik teks acak: "zzzz" lalu tekan `Enter` $\rightarrow$ demonstrasikan kemunculan pesan Empty State: *"Yang kamu cari tidak ditemukan"*.
 * **Naskah Suara (Anggota 2):**
   > *"Terima kasih [Nama Anggota 1]. Saya [Nama Anggota 2, NIM] bertanggung jawab atas integrasi data asinkron pada **Pekan 4** dan fondasi logika server-side pada **Pekan 5**.*
   > 
@@ -141,16 +177,26 @@ flowchart LR
 
 ### SEGMENT 4: PEKAN 6 & 7 — OOP & ARSITEKTUR MVC ENTERPRISE (Anggota 3 / Lead)
 * **Durasi:** ~4.5 Menit
-* **Panduan Aksi Layar:**
-  1. Di VS Code, buka `backend/classes/Menu.php`. Sorot deklarasi class `Menu`, 6 properti bertipe privat (`private int $id`, `private string $nama`, dll), constructor `__construct()`, getter methods, method status (`isBestSeller`, `isPromo`, `isHabis`), dan method enkapsulasi `renderKartu()`.
-  2. Di VS Code, buka folder `backend/` untuk memperlihatkan struktur MVC: `models/MenuModel.php`, `controllers/MenuController.php`, `views/menu/index.php`, `views/menu/show.php`, dan router `backend/index.php`.
-  3. Buka `backend/controllers/MenuController.php` $\rightarrow$ sorot method `index()` dan method `show()`.
-  4. Buka `backend/models/MenuModel.php` $\rightarrow$ perlihatkan bagaimana data array dikonversi menjadi kumpulan object `Menu`.
-  5. Buka `backend/index.php` $\rightarrow$ tunjukkan router tipis (*Front Controller Pattern*).
+* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
+  1. Buka file `backend/classes/Menu.php`:
+     - Sorot **Baris 3–26**: Definisi Class `Menu`, 6 properti `private`, dan konstruktor `__construct()`.
+     - Sorot **Baris 28–56**: Public getter methods (`getId()`, `getNama()`, dll).
+     - Sorot **Baris 58–76**: Helper status methods (`isBestSeller()`, `isPromo()`, `isHabis()`).
+     - Sorot **Baris 89–124**: Method enkapsulasi rendering kartu `renderKartu(): string`.
+  2. Buka file `backend/index.php`:
+     - Sorot **Baris 1–12**: Front Controller Router (membaca `$_GET['action']`, delegasi ke method controller).
+  3. Buka file `backend/controllers/MenuController.php`:
+     - Sorot **Baris 14–27**: Method `index()` (tangkap parameter, panggil model, salurkan data bersih ke view).
+     - Sorot **Baris 29–38**: Method `show()` (tangkap ID, cari item, kirim ke view detail).
+  4. Buka file `backend/models/MenuModel.php`:
+     - Sorot **Baris 17–31**: Method `ambilSemua()` yang memetakan array mentah menjadi koleksi objek `Menu`.
+     - Sorot **Baris 33–49**: Method `cariById(int $id): ?Menu`.
+  5. Buka file `backend/views/menu/show.php`:
+     - Sorot **Baris 36–63**: Template view detail produk terisolasi & penanganan kondisi 404 item kosong.
   6. Buka peramban pada alamat: `http://localhost:8000/backend/index.php` (menampilkan katalog lengkap MVC).
   7. Klik filter tab "Minuman" di halaman MVC $\rightarrow$ URL berubah menjadi `?kategori=Minuman` dan data tersaring dari sisi server.
   8. Buka rute detail item: `http://localhost:8000/backend/?action=show&id=1` $\rightarrow$ perlihatkan tampilan detail produk lengkap dari `views/menu/show.php`.
-  9. Coba rute detail dengan ID yang tidak ada: `http://localhost:8000/backend/?action=show&id=999` $\rightarrow$ perlihatkan penanganan graceful error: *"Item Tidak Ditemukan"*.
+  9. Coba rute detail dengan ID salah: `http://localhost:8000/backend/?action=show&id=999` $\rightarrow$ perlihatkan penanganan graceful error: *"Item Tidak Ditemukan"*.
 * **Naskah Suara (Anggota 3):**
   > *"Terima kasih [Nama Anggota 2]. Saya [Nama Anggota 3, NIM] akan memaparkan puncak evolusi rekayasa piranti lunak dari sistem kami pada **Pekan 6** dan **Pekan 7**.*
   > 
