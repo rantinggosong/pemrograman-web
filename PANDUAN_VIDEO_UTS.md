@@ -78,147 +78,172 @@ flowchart LR
 
 ---
 
-## 3. Naskah Siap Rekam Kata-per-Kata (Full Script)
+## 3. Naskah Siap Rekam Kata-per-Kata (Sinkron: Kode $\leftrightarrow$ Suara $\leftrightarrow$ Output Browser)
 
 ---
 
-### SEGMENT 1: PEMBUKAAN & GIT CLONE (Anggota 3 / Lead)
-* **Durasi:** ~1.5 Menit
-* **Panduan Aksi Layar:**
-  1. Tampilkan Terminal kosong.
-  2. Ketik perintah: `git clone https://github.com/<username>/<nama-repo>.git`
-  3. Masuk direktori: `cd "tugas pemrograman web"`
-  4. Tampilkan histori commit: `git log --oneline -n 10`
-  5. Buka editor: `code .`
-  6. Jalankan server lokal: `php -S localhost:8000`
-* **Naskah Suara (Anggota 3):**
-  > *"Assalamu’alaikum warahmatullahi wabarakatuh. Kami dari tim pengembang kelas Web J ingin mempresentasikan pengerjaan **Tugas Pengganti UTS Pemrograman Web** dengan tema proyek: **Web Pemesanan Makanan & Minuman Cafe Berbasis QR Code**.*
+### SEGMENT 1: PEMBUKAAN & INISIALISASI GIT CLONE (Anggota 3 / Lead)
+* **Total Durasi:** ~1.5 Menit
+
+#### 🔹 Langkah 1.1: Git Clone & Verifikasi Riwayat Commit
+* **Aksi Layar (Terminal):**
+  1. Tampilkan Terminal kosong (PowerShell/CMD).
+  2. Ketik: `git clone https://github.com/<username>/<nama-repo>.git` lalu tekan Enter.
+  3. Ketik: `cd "tugas pemrograman web"`
+  4. Ketik: `git log --oneline -n 10`
+* **Naskah Bicara (Anggota 3):**
+  > *"Assalamu’alaikum warahmatullahi wabarakatuh. Selamat pagi/siang kepada Bapak Dosen Rezha Rivai dan rekan-rekan sekalian. Kami dari tim pengembang kelas Web J ingin mempresentasikan pengerjaan **Tugas Pengganti UTS Pemrograman Web** dengan tema proyek: **Web Pemesanan Makanan & Minuman Cafe Berbasis QR Code**.*
   > 
-  > *Sesuai ketentuan instruksi tugas, rekaman kami awali dengan pembuktian inisialisasi lingkungan melalui `git clone` repositori GitHub resmi kami secara live di terminal. Melalui perintah `git log`, dapat terlihat catatan commit bertahap yang membuktikan rekam jejak pengerjaan kami dari Pekan 2 hingga Pekan 7.*
-  > 
-  > *Untuk menguji aplikasi secara lokal, kami menjalankan server bawaan PHP 8.3 pada port 8000. Sistem ini kami kembangkan dengan arsitektur modular yang memadukan Client-Side SPA pada folder `frontend/` dan Server-Side MVC pada folder `backend/`.*
+  > *Sesuai ketentuan instruksi tugas, rekaman kami awali dengan pembuktian inisialisasi lingkungan melalui `git clone` repositori GitHub resmi kami secara live di terminal. Melalui perintah `git log`, dapat terlihat catatan commit bertahap yang membuktikan rekam jejak pengerjaan kami dari Pekan 2 hingga Pekan 7."*
+
+#### 🔹 Langkah 1.2: Membuka Editor & Spin-up Server Lokal PHP
+* **Aksi Layar (Terminal & VS Code):**
+  1. Di terminal ketik: `code .` (membuka VS Code).
+  2. Di terminal VS Code jalankan: `php -S localhost:8000`
+* **Naskah Bicara (Anggota 3):**
+  > *"Untuk menguji aplikasi secara lokal, kami menjalankan server bawaan PHP 8.3 pada port 8000. Sistem ini kami kembangkan dengan arsitektur modular yang memadukan Client-Side SPA pada folder `frontend/` dan Server-Side MVC pada folder `backend/`.*
   > 
   > *Untuk penjelasan teknis Pekan 2 dan Pekan 3, akan dipaparkan secara mendalam oleh rekan saya, [Nama Anggota 1]."*
 
 ---
 
 ### SEGMENT 2: PEKAN 2 & 3 — FRONTEND UI & INTERAKSI DOM (Anggota 1)
-* **Durasi:** ~3.5 Menit
-* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
-  1. Buka file `frontend/index.html`:
-     - Sorot **Baris 12–28**: Konfigurasi Tailwind CSS (palet warna kustom *earthy warm* & font ganda Playfair/Plus Jakarta Sans).
-     - Sorot **Baris 31–47**: Struktur Semantic HTML5 (`<main>`, search input `#input-pencarian`, filter bar `#filter-container`, dan grid `grid-cols-2 lg:grid-cols-3`).
-     - Sorot **Baris 64–66**: Komponen tombol paginasi dinamis (`#navigasi`).
-  2. Buka file `frontend/script.js`:
-     - Sorot **Baris 9–16**: Penyeleksian DOM element (`getElementById` & `querySelectorAll`).
-     - Sorot **Baris 17–53**: Fungsi `renderMenu()` dan template literal kartu produk dinamis.
-     - Sorot **Baris 77–108**: Event listener tombol kategori filter dan mesin paginasi progresif (+4 kartu per klik).
-     - Sorot **Baris 110–124**: Event listener realtime search (`keyup` untuk Enter & `input` untuk reset).
-  3. Buka peramban pada alamat: `http://localhost:8000/frontend/index.html`.
-  4. Tekan tombol `F12` (Inspect Element) $\rightarrow$ aktifkan toggle device emulator (layar HP: terlihat 2 kolom), lalu kembalikan ke layar penuh desktop (terlihat 3 kolom).
-  5. Klik tombol kategori **"Minuman"** pada bilah filter $\rightarrow$ perlihatkan daftar menu tersaring seketika.
-  6. Ketikkan kata **"kopi"** pada search bar lalu tekan `Enter` $\rightarrow$ kartu menu tersaring. Hapus teks pencarian $\rightarrow$ kembali normal.
-  7. Gulir ke bawah dan klik tombol **"Lihat Lebih Banyak"** $\rightarrow$ kuota kartu bertambah 4 item secara dinamis.
-* **Naskah Suara (Anggota 1):**
-  > *"Terima kasih [Nama Anggota 3]. Saya [Nama Anggota 1, NIM] bertanggung jawab atas rekayasa antarmuka pengguna pada **Pekan 2** dan **Pekan 3** yang terpusat di folder `frontend/`.*
+* **Total Durasi:** ~3.5 Menit
+
+#### 🔹 Langkah 2.1: Pekan 2 — UI Semantik & Sistem Desain Tailwind CSS
+* **Aksi Layar (VS Code):**
+  1. Buka file `frontend/index.html`.
+  2. Sorot **Baris 31–47** (tag semantik `<main>`, input search, filter bar, kontainer grid).
+  3. Sorot **Baris 12–28** (konfigurasi tema Tailwind CSS: warna *earthy warm* & font).
+* **Naskah Bicara (Anggota 1):**
+  > *"Terima kasih [Nama Anggota 3]. Saya [Nama Anggota 1, NIM] bertanggung jawab atas rekayasa antarmuka pengguna pada **Pekan 2** dan **Pekan 3** di folder `frontend/`.*
   > 
-  > *Pada **Pekan 2: UI Semantik & Sistem Desain Responsif**, terdapat 3 task utama di file `index.html`:*
-  > * *Task 01 (Struktur Semantik): Kami menyusun hierarki dokumen menggunakan tag standar HTML5 seperti `<main>` sebagai kontainer utama produk dan elemen identitas form yang jelas untuk aksesibilitas.*
-  > * *Task 02 (Sistem Desain Responsif): Menggunakan framework Tailwind CSS dengan tema warna bernuansa hangat (earthy warm). Kami menerapkan tata letak grid adaptif: 2 kolom pada layar ponsel (`grid-cols-2`) dan 3 kolom pada desktop (`lg:grid-cols-3`) tanpa adanya overflow horizontal.*
-  > * *Task 03 (Penyempurnaan Antarmuka): Memasang tipografi ganda Playfair Display untuk kesan elegan dan Plus Jakarta Sans untuk teks isi, didukung aset gambar beresolusi tinggi.*
+  > *Pada **Pekan 2: UI Semantik & Sistem Desain Responsif**, kita buka `frontend/index.html`. Di baris 31–47 kami menyusun dokumen semantik standar menggunakan tag `<main>` sebagai kontainer utama produk dan elemen identitas form yang jelas untuk aksesibilitas.*
   > 
-  > *Melangkah ke **Pekan 3: Arsitektur DOM & Interaksi Berbasis Event**, di file `script.js`:*
-  > * *Task 01: Kami menggunakan penyeleksian DOM modern seperti `getElementById` dan `querySelectorAll` untuk memanipulasi class CSS dan status tombol aktif.*
-  > * *Task 02: Memasang Event Listener `click` pada tombol kategori serta listener `keyup` dan `input` pada kolom pencarian untuk merespons aksi pengguna secara instan.*
-  > * *Task 03: Membangun mekanisme paginasi progresif dinamis. Tombol 'Lihat Lebih Banyak' menambah 4 kartu setiap diklik, dan secara otomatis bertransformasi menjadi 'Tutup Kembali' jika semua item telah terbuka.*
-  > 
-  > *Seperti yang dapat dilihat pada demonstrasi peramban: tata letak beradaptasi dengan sempurna antara mode mobile dan desktop. Ketika saya mengklik kategori 'Minuman', menu langsung tersaring, pencarian teks berfungsi realtime, dan tombol paginasi memuat konten tambahan secara mulus.*
-  > 
-  > *Selanjutnya, penjelasan Pekan 4 dan Pekan 5 akan dilanjutkan oleh rekan saya, [Nama Anggota 2]."*
+  > *Kemudian di baris 12–28, kami mengonfigurasi tema warna bernuansa hangat (earthy warm) Tailwind CSS serta tata letak grid responsif: 2 kolom untuk ponsel dan 3 kolom untuk desktop tanpa overflow horizontal."*
+* **Aksi Layar (Browser):**
+  1. Buka peramban ke: `http://localhost:8000/frontend/index.html`.
+  2. Tekan tombol `F12` (Inspect Element) $\rightarrow$ aktifkan toggle device emulator (layar HP: terlihat 2 kolom), lalu kembalikan ke layar desktop (terlihat 3 kolom).
+* **Naskah Bicara (Anggota 1):**
+  > *"Bisa kita buktikan langsung di peramban: ketika ukuran layar beralih ke mode mobile, tata letak otomatis beradaptasi menjadi 2 kolom, dan saat kembali ke ukuran desktop menjadi 3 kolom secara rapi."*
+
+#### 🔹 Langkah 2.2: Pekan 3 — DOM Selection & Event Search Interaktif
+* **Aksi Layar (VS Code):**
+  1. Buka file `frontend/script.js`.
+  2. Sorot **Baris 9–16** (penyeleksian elemen DOM via `getElementById`).
+  3. Sorot **Baris 77–94** (event click pada tombol kategori filter).
+  4. Sorot **Baris 110–124** (event listener realtime search `keyup` dan `input`).
+* **Naskah Bicara (Anggota 1):**
+  > *"Melangkah ke **Pekan 3: Arsitektur DOM & Interaksi Berbasis Event**, di file `script.js` baris 9–16 kami menyeleksi elemen DOM menggunakan `getElementById`. Di baris 77–94 kami memasang event listener click pada tombol kategori filter, dan di baris 110–124 kami menangani input event pada search bar untuk menyaring menu secara realtime."*
+* **Aksi Layar (Browser):**
+  1. Di tab browser `frontend/index.html`, klik tombol filter **"Minuman"** $\rightarrow$ daftar menu tersaring.
+  2. Ketikkan kata **"kopi"** pada search bar lalu tekan `Enter` $\rightarrow$ kartu menu menyaring varian kopi.
+  3. Hapus teks pencarian $\rightarrow$ tampilan kembali normal.
+* **Naskah Bicara (Anggota 1):**
+  > *"Di peramban hasilnya sangat instan: saat tombol 'Minuman' diklik, kartu menu langsung tersaring seketika. Dan saat saya mengetik kata 'kopi', DOM secara realtime memfilter kartu yang relevan tanpa me-reload halaman."*
+
+#### 🔹 Langkah 2.3: Pekan 3 — Dynamic Progressive Pagination
+* **Aksi Layar (VS Code):**
+  1. Di file `frontend/script.js`, sorot **Baris 96–108** (fungsi event click paginasi tombol `#navigasi`).
+* **Naskah Bicara (Anggota 1):**
+  > *"Masih di Pekan 3, pada baris 96–108 kami membangun mesin paginasi dinamis. Tombol 'Lihat Lebih Banyak' akan menambah kuota 4 kartu setiap kali diklik dan bertransformasi menjadi 'Tutup Kembali' jika seluruh data dalam kategori telah terbuka."*
+* **Aksi Layar (Browser):**
+  1. Klik kategori **"All"** $\rightarrow$ scroll ke bawah.
+  2. Klik tombol **"Lihat Lebih Banyak"** 2 kali $\rightarrow$ perlihatkan kuota kartu bertambah dan teks tombol berubah jadi **"Tutup Kembali"**.
+* **Naskah Bicara (Anggota 1):**
+  > *"Terbukti di browser: saat tombol 'Lihat Lebih Banyak' diklik, 4 kartu baru muncul secara dinamis, dan begitu semua item terbuka teks tombol berubah menjadi 'Tutup Kembali'. Selanjutnya, penjelasan Pekan 4 dan Pekan 5 akan dilanjutkan oleh rekan saya, [Nama Anggota 2]."*
 
 ---
 
 ### SEGMENT 3: PEKAN 4 & 5 — REST API ASINKRON & DASAR SERVER-SIDE PHP (Anggota 2)
-* **Durasi:** ~3.5 Menit
-* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
-  1. Buka file `frontend/script.js`:
-     - Sorot **Baris 132–158**: Fungsi `ambilDataMenu()` berbasis `async/await` dan `fetch('../backend/menu.json')`.
-     - Sorot **Baris 133–138**: State Management saat *Loading State* (spinner aktif).
-     - Sorot **Baris 54–59**: Penanganan *Empty State* saat hasil pencarian tidak ditemukan.
-     - Sorot **Baris 151–157**: Blok `catch` penanganan *Error State* jika terjadi kegagalan jaringan.
-  2. Buka file `backend/data/data_menu.php`:
-     - Sorot **Baris 1–25**: Struktur data array asosiatif multidimensi master 30 item menu.
-  3. Buka file `backend/helpers/functions.php`:
-     - Sorot **Baris 3–6**: Fungsi murni prosedural `formatRupiah(int $nominal)`.
-     - Sorot **Baris 8–23**: Fungsi pemfilteran `saringMenu()` dan `saringMenuByKategori()`.
-  4. Buka tab baru di peramban: `http://localhost:8000/backend/api.php`:
-     - Buka `backend/api.php` di VS Code (Sorot **Baris 1–13** untuk header JSON dan `json_encode`).
-     - Perlihatkan keluaran JSON terstruktur dengan `Content-Type: application/json`.
-  5. Tambahkan query filter di peramban: `http://localhost:8000/backend/api.php?kategori=Makanan` $\rightarrow$ perlihatkan JSON tersaring khusus makanan.
-  6. Kembali ke tab frontend, ketik teks acak: "zzzz" lalu tekan `Enter` $\rightarrow$ demonstrasikan kemunculan pesan Empty State: *"Yang kamu cari tidak ditemukan"*.
-* **Naskah Suara (Anggota 2):**
-  > *"Terima kasih [Nama Anggota 1]. Saya [Nama Anggota 2, NIM] bertanggung jawab atas integrasi data asinkron pada **Pekan 4** dan fondasi logika server-side pada **Pekan 5**.*
+* **Total Durasi:** ~3.5 Menit
+
+#### 🔹 Langkah 3.1: Pekan 4 — Integrasi Fetch API & Siklus Status Jaringan
+* **Aksi Layar (VS Code):**
+  1. Buka file `frontend/script.js`.
+  2. Sorot **Baris 132–158** (fungsi `ambilDataMenu()` berbasis `async/await` dan `fetch('../backend/menu.json')`).
+  3. Tunjukkan penanganan siklus status: **Baris 133–138** (*Loading State*), **Baris 54–59** (*Empty State*), dan **Baris 151–157** (*Error State* di blok `catch`).
+* **Naskah Bicara (Anggota 2):**
+  > *"Terima kasih [Nama Anggota 1]. Saya [Nama Anggota 2, NIM] bertanggung jawab atas integrasi data asinkron pada **Pekan 4** dan fondasi server-side pada **Pekan 5**.*
   > 
-  > *Pada **Pekan 4: Integrasi REST API & Manajemen Status Asinkron**:*
-  > * *Task 01 (Koneksi REST API): Pada file `script.js`, kami menerapkan pemanggilan jaringan asinkron menggunakan sintaks modern `async/await` dan fungsi `fetch()`. Ini memisahkan sumber data sepenuhnya dari tampilan antarmuka.*
-  > * *Task 02 (Render Data Dinamis): Data JSON yang diterima diproses secara dinamis menggunakan template literals dan diinjeksikan langsung ke dalam kontainer DOM.*
-  > * *Task 03 (Manajemen Status Siklus API): Kami merancang siklus status jaringan yang andal: status Loading menampilkan animasi pemutar, status Success menampilkan kartu menu, dan status Empty menangani kondisi jika hasil filter bernilai kosong.*
+  > *Pada **Pekan 4: Integrasi REST API & Manajemen Status Asinkron**, di file `script.js` baris 132–158 kami menerapkan pemanggilan jaringan asinkron menggunakan `async/await` dan `fetch()`. Ini memisahkan data sepenuhnya dari antarmuka.*
   > 
-  > *Beralih ke **Pekan 5: Pemrosesan Server-Side & Rendering Dinamis (Procedural PHP)**, kami mulai membangun fondasi backend di folder `backend/`:*
-  > * *Task 01 (Inisialisasi Halaman Server-Side): Menyiapkan pemrosesan backend PHP 8.3 dengan membaca query string HTTP GET `$_GET['kategori']` untuk memfilter data langsung di server.*
-  > * *Task 02 (Data Layer & Helper Functions): Di file `data/data_menu.php`, kami menyusun 30 data master produk dalam array asosiatif multidimensi. Pada `helpers/functions.php`, kami mengimplementasikan fungsi murni prosedural seperti `formatRupiah()` untuk standarisasi format rupiah serta pemfilteran data modular.*
-  > * *Task 03 (Server-Side Rendering Dasar): Mengonstruksi perulangan `foreach` untuk merender komponen HTML dari sisi server.*
+  > *Kami juga mengelola siklus status jaringan secara lengkap: animasi putar saat Loading di baris 133, dan isolasi galat jaringan di blok catch baris 151."*
+* **Aksi Layar (Browser):**
+  1. Di tab browser `frontend/index.html`, ketikkan kata kunci acak yang tidak ada di menu: **"zzzz"** lalu tekan `Enter`.
+* **Naskah Bicara (Anggota 2):**
+  > *"Dapat kita lihat di browser: ketika data yang dicari tidak ditemukan, antarmuka menangani kondisi tersebut secara anggun dengan menampilkan Empty State: 'Yang kamu cari tidak ditemukan'."*
+
+#### 🔹 Langkah 3.2: Pekan 5 — Master Data PHP & Pure Helper Functions
+* **Aksi Layar (VS Code):**
+  1. Buka file `backend/data/data_menu.php` $\rightarrow$ Sorot **Baris 1–25** (master data 30 item menu dalam array asosiatif multidimensi).
+  2. Buka file `backend/helpers/functions.php` $\rightarrow$ Sorot **Baris 3–6** (`formatRupiah`) dan **Baris 8–23** (`saringMenu` & `saringMenuByKategori`).
+* **Naskah Bicara (Anggota 2):**
+  > *"Beralih ke **Pekan 5: Pemrosesan Server-Side (Procedural PHP)**, kami mulai memindahkan beban ke server. Di `backend/data/data_menu.php` baris 1–25 kami menyusun 30 data produk dalam array multidimensi.*
   > 
-  > *Pada demonstrasi peramban: ketika kita mengakses `backend/api.php`, server PHP sukses menyajikan endpoint REST API JSON berstandar industri. Saat parameter `?kategori=Makanan` ditambahkan, backend memfilter respons secara dinamis. Dan di sisi klien, ketika kita mencari kata kunci yang tidak ada, antarmuka merespons secara anggun dengan tampilan Empty State.*
-  > 
-  > *Tahap evolusi berikutnya, yaitu Object-Oriented Programming dan Arsitektur MVC akan dipaparkan oleh [Nama Anggota 3]."*
+  > *Kemudian di `backend/helpers/functions.php` baris 3–23, kami membuat fungsi murni prosedural seperti `formatRupiah()` untuk standarisasi format rupiah serta fungsi `saringMenu()` untuk menyaring data array secara modular."*
+
+#### 🔹 Langkah 3.3: Pekan 5 — Eksekusi Endpoint REST API Backend
+* **Aksi Layar (VS Code):**
+  1. Buka file `backend/api.php` $\rightarrow$ Sorot **Baris 1–13** (header `Content-Type: application/json`, query parameter `$_GET['kategori']`, dan `echo json_encode()`).
+* **Naskah Bicara (Anggota 2):**
+  > *"Di file `backend/api.php` baris 1–13, kami membangun endpoint REST API murni yang mengonversi array master PHP menjadi respons JSON berstandar modern."*
+* **Aksi Layar (Browser):**
+  1. Buka tab baru di browser: `http://localhost:8000/backend/api.php` $\rightarrow$ perlihatkan struktur JSON yang rapi.
+  2. Tambahkan parameter filter di URL: `http://localhost:8000/backend/api.php?kategori=Makanan` $\rightarrow$ perlihatkan data JSON tersaring khusus makanan.
+* **Naskah Bicara (Anggota 2):**
+  > *"Di peramban terbukti: endpoint `backend/api.php` sukses menyajikan data JSON yang bersih. Ketika kita menambahkan parameter `?kategori=Makanan`, server langsung menyaring array data khusus makanan secara dinamis. Tahap evolusi selanjutnya ke OOP dan MVC akan dipaparkan oleh rekan saya, [Nama Anggota 3]."*
 
 ---
 
 ### SEGMENT 4: PEKAN 6 & 7 — OOP & ARSITEKTUR MVC ENTERPRISE (Anggota 3 / Lead)
-* **Durasi:** ~4.5 Menit
-* **Panduan Aksi Layar (Buka File & Baris Kode di VS Code):**
-  1. Buka file `backend/classes/Menu.php`:
-     - Sorot **Baris 3–26**: Definisi Class `Menu`, 6 properti `private`, dan konstruktor `__construct()`.
-     - Sorot **Baris 28–56**: Public getter methods (`getId()`, `getNama()`, dll).
-     - Sorot **Baris 58–76**: Helper status methods (`isBestSeller()`, `isPromo()`, `isHabis()`).
-     - Sorot **Baris 89–124**: Method enkapsulasi rendering kartu `renderKartu(): string`.
-  2. Buka file `backend/index.php`:
-     - Sorot **Baris 1–12**: Front Controller Router (membaca `$_GET['action']`, delegasi ke method controller).
-  3. Buka file `backend/controllers/MenuController.php`:
-     - Sorot **Baris 14–27**: Method `index()` (tangkap parameter, panggil model, salurkan data bersih ke view).
-     - Sorot **Baris 29–38**: Method `show()` (tangkap ID, cari item, kirim ke view detail).
-  4. Buka file `backend/models/MenuModel.php`:
-     - Sorot **Baris 17–31**: Method `ambilSemua()` yang memetakan array mentah menjadi koleksi objek `Menu`.
-     - Sorot **Baris 33–49**: Method `cariById(int $id): ?Menu`.
-  5. Buka file `backend/views/menu/show.php`:
-     - Sorot **Baris 36–63**: Template view detail produk terisolasi & penanganan kondisi 404 item kosong.
-  6. Buka peramban pada alamat: `http://localhost:8000/backend/index.php` (menampilkan katalog lengkap MVC).
-  7. Klik filter tab "Minuman" di halaman MVC $\rightarrow$ URL berubah menjadi `?kategori=Minuman` dan data tersaring dari sisi server.
-  8. Buka rute detail item: `http://localhost:8000/backend/?action=show&id=1` $\rightarrow$ perlihatkan tampilan detail produk lengkap dari `views/menu/show.php`.
-  9. Coba rute detail dengan ID salah: `http://localhost:8000/backend/?action=show&id=999` $\rightarrow$ perlihatkan penanganan graceful error: *"Item Tidak Ditemukan"*.
-* **Naskah Suara (Anggota 3):**
-  > *"Terima kasih [Nama Anggota 2]. Saya [Nama Anggota 3, NIM] akan memaparkan puncak evolusi rekayasa piranti lunak dari sistem kami pada **Pekan 6** dan **Pekan 7**.*
+* **Total Durasi:** ~4.5 Menit
+
+#### 🔹 Langkah 4.1: Pekan 6 — Object-Oriented Programming (Class Menu & Encapsulation)
+* **Aksi Layar (VS Code):**
+  1. Buka file `backend/classes/Menu.php`.
+  2. Sorot **Baris 3–26** (definisi Class `Menu`, 6 properti `private`, dan konstruktor `__construct()`).
+  3. Sorot **Baris 28–56** (lapisan public getter methods).
+  4. Sorot **Baris 89–124** (method enkapsulasi rendering kartu `renderKartu(): string`).
+* **Naskah Bicara (Anggota 3):**
+  > *"Terima kasih [Nama Anggota 2]. Saya [Nama Anggota 3, NIM] akan memaparkan puncak evolusi sistem kami pada **Pekan 6** dan **Pekan 7**.*
   > 
-  > *Pada **Pekan 6: Object-Oriented Programming (OOP)**, kami mentransformasikan kode prosedural menjadi model berorientasi objek murni di file `classes/Menu.php`:*
-  > * *Task 01 (Definisi Class & Object): Kami membuat blueprint Class `Menu` dengan konstruktor berparameter guna menjamin integritas instansiasi entitas menu.*
-  > * *Task 02 (Properti Tertipe & Enkapsulasi): Mengadopsi prinsip enkapsulasi di mana seluruh atribut (`id`, `nama`, `harga`, `kategori`, `status`) dideklarasikan secara `private` dan diakses melalui public getter methods. Kami juga menerapkan strict typing PHP 8.*
-  > * *Task 03 (Metode Konten Dinamis): Logika visual kartu kami tempatkan di dalam method `renderKartu()`. Method ini mengevaluasi badge status secara kondisional dan menghasilkan struktur HTML kartu yang mandiri.*
+  > *Pada **Pekan 6: Object-Oriented Programming (OOP)**, di file `classes/Menu.php` baris 3–26 kami membangun blueprint Class `Menu` dengan 6 atribut bertipe data ketat yang dienkapsulasi secara `private`. Akses data dijamin aman melalui getter methods di baris 28–56.*
   > 
-  > *Puncaknya pada **Pekan 7: Arsitektur Model-View-Controller (MVC)**, seluruh arsitektur backend kami susun mengikuti prinsip Separation of Concerns:*
-  > * *Task 01 (Desain Struktur MVC): Kami memisahkan direktori menjadi `models/` untuk layer data, `controllers/` untuk kendali alur request, dan `views/menu/` untuk template HTML murni. File `backend/index.php` direfaktor menjadi Front Controller Router yang ramping.*
-  > * *Task 02 (Membangun Controller): `MenuController` mengatur seluruh alur HTTP. Method `index()` membaca query parameter, memanggil Model, lalu menyalurkan data bersih ke View katalog. Method `show()` menangani routing detail produk berdasarkan parameter `id`.*
-  > * *Task 03 (Koneksi Model-View-Controller Triad): `MenuModel` bertugas mengabstraksi data dan membungkusnya ke dalam koleksi objek `Menu`. Controller kemudian meneruskan objek tersebut ke template View tanpa ada logika query di dalam View.*
+  > *Di baris 89–124, logika komponen visual kartu kami kapsulasikan di dalam method `renderKartu()` yang secara otomatis mengevaluasi badge Best Seller, Promo, maupun status Habis."*
+
+#### 🔹 Langkah 4.2: Pekan 7 — Arsitektur Model-View-Controller (MVC)
+* **Aksi Layar (VS Code):**
+  1. Perlihatkan struktur explorer folder `backend/`: `controllers/`, `models/`, `views/menu/`, dan `index.php`.
+  2. Buka `backend/index.php` $\rightarrow$ Sorot **Baris 1–12** (Front Controller Router yang ramping).
+  3. Buka `backend/controllers/MenuController.php` $\rightarrow$ Sorot **Baris 14–27** (method `index()`) dan **Baris 29–38** (method `show()`).
+  4. Buka `backend/models/MenuModel.php` $\rightarrow$ Sorot **Baris 17–31** (`ambilSemua()`) dan **Baris 33–49** (`cariById()`).
+  5. Buka `backend/views/menu/show.php` $\rightarrow$ Sorot **Baris 36–63** (template view detail produk).
+* **Naskah Bicara (Anggota 3):**
+  > *"Puncaknya pada **Pekan 7: Arsitektur Model-View-Controller (MVC)** dengan pemisahan tugas yang sangat ketat:*
+  > * *Di `backend/index.php` baris 1–12, berkas ini bertindak sebagai Front Controller Router yang membaca parameter `action`.*
+  > * *Di `MenuController.php` baris 14–38, controller mengorkestrasi alur HTTP: method `index()` menyajikan katalog, dan method `show()` menangani routing detail produk.*
+  > * *Di `MenuModel.php` baris 17–49, model mengabstraksi data dan membungkusnya ke dalam koleksi objek `Menu`.*
+  > * *Dan di folder `views/menu/`, view `show.php` murni menampilkan antarmuka detail tanpa logika query."*
+
+#### 🔹 Langkah 4.3: Pekan 7 — Live Demo Output MVC (Katalog, Filter Server & Rute Detail)
+* **Aksi Layar (Browser):**
+  1. Buka peramban ke: `http://localhost:8000/backend/index.php` (menampilkan katalog lengkap MVC).
+  2. Klik filter tab **"Minuman"** pada katalog MVC $\rightarrow$ URL otomatis menjadi `?kategori=Minuman` dan data tersaring server-side.
+  3. Buka rute detail item: `http://localhost:8000/backend/?action=show&id=1` $\rightarrow$ perlihatkan tampilan detail produk lengkap dari `views/menu/show.php`.
+  4. Buka rute detail dengan ID salah: `http://localhost:8000/backend/?action=show&id=999` $\rightarrow$ perlihatkan penanganan graceful error: *"Item Tidak Ditemukan"*.
+* **Naskah Bicara (Anggota 3):**
+  > *"Pembuktian langsung di peramban: alamat `backend/index.php` berjalan murni di atas arsitektur MVC. Ketika kita memilih filter 'Minuman', server menangani query string `?kategori=Minuman` secara server-side.*
   > 
-  > *Seperti yang tampak pada peramban: URL `backend/index.php` menyajikan katalog yang dirender langsung oleh arsitektur MVC. Ketika kita memilih kategori Minuman, Controller mengeksekusi parameter `?kategori=Minuman` secara server-side. Dan ketika kita membuka rute detail di `?action=show&id=1`, method `show()` langsung memuat halaman detail yang responsif dan anggun. Bahkan jika ID tidak valid seperti `id=999`, sistem menanganinya dengan aman tanpa galat server."*
+  > *Saat rute detail `?action=show&id=1` dibuka, Controller memicu method `show()` dan me-render template view detail yang anggun. Bahkan jika ID tidak valid seperti `id=999`, view show.php menangani kondisi kosong secara aman tanpa galat server."*
 
 ---
 
 ### SEGMENT 5: PENUTUP & PEMBAGIAN KONTRIBUSI ANGGOTA (Wajib Sesuai Rubrik Dosen)
-* **Durasi:** ~2 Menit
-* **Panduan Aksi Layar:**
-  Tampilkan dokumen tabel rekapitulasi kontribusi anggota di layar secara penuh dan jelas.
-* **Naskah Suara (Dibacakan Anggota 3):**
+* **Total Durasi:** ~2 Menit
+* **Aksi Layar:**
+  Tampilkan dokumen tabel rekapitulasi kontribusi anggota (Bagian 2.2 / slide) di layar secara penuh dan jelas.
+* **Naskah Bicara (Dibacakan Anggota 3):**
   > *"Sebagai penutup video dan untuk memenuhi instruksi mutlak dosen terkait pembagian tugas masing-masing anggota yang tidak boleh sama, berikut adalah rekapitulasi kepemilikan kode kelompok kami:*
   > 
   > 1. *Pertama, **[Nama Anggota 1 - NIM]** sebagai **Frontend UI & DOM Engineer**, bertanggung jawab penuh atas struktur semantik HTML5 dan sistem responsif Tailwind CSS pada Pekan 2, serta manipulasi DOM dan event search interaktif pada Pekan 3.*
@@ -228,6 +253,7 @@ flowchart LR
   > *Seluruh source code telah diunggah ke repositori GitHub kami dan dokumentasi komprehensif dari Week 2 hingga Week 7 dapat diakses pada berkas README.md.*
   > 
   > *Demikian presentasi tugas pengganti UTS dari kelompok kami. Terima kasih banyak atas perhatian Bapak Rezha Rivai. Wassalamu’alaikum warahmatullahi wabarakatuh."*
+
 
 ---
 
