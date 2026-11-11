@@ -33,6 +33,14 @@ halo, kami dari tim pengembang yang mengembangkan project web pemesanan makanan 
     - [Task 01: Desain Struktur MVC](#task-01-desain-struktur-mvc)
     - [Task 02: Membangun Controller](#task-02-membangun-controller)
     - [Task 03: Menghubungkan Model, Controller & View](#task-03-menghubungkan-model-controller--view)
+  - [Week 9: Laravel CRUD & Eloquent ORM](#week-9-laravel-crud--eloquent-orm)
+    - [Task 01: Instalasi & Fondasi Framework Laravel](#task-01-instalasi--fondasi-framework-laravel)
+    - [Task 02: Konfigurasi Basis Data Relasional (.env)](#task-02-konfigurasi-basis-data-relasional-env)
+    - [Task 03: Migrasi Skema Multi-Tabel (Database Migrations)](#task-03-migrasi-skema-multi-tabel-database-migrations)
+    - [Task 04: Pemodelan Domain & Relasi Eloquent (Models)](#task-04-pemodelan-domain--relasi-eloquent-models)
+    - [Task 05: Implementasi Controller (Method index)](#task-05-implementasi-controller-method-index)
+    - [Task 06: Template Antarmuka Blade Responsif (Views)](#task-06-template-antarmuka-blade-responsif-views)
+    - [Task 07: Routing & Endpoint Kueri Dinamis (Routes)](#task-07-routing--endpoint-kueri-dinamis-routes)
 - [Skema Data & Kontrak API](#skema-data--kontrak-api)
 - [Spesifikasi Manajemen Status (State Management)](#spesifikasi-manajemen-status-state-management)
 - [Panduan Pengembangan Lokal](#panduan-pengembangan-lokal)
@@ -110,6 +118,23 @@ tugas-pemrograman-web/
 │   │       └── show.php       # View detail item (template HTML murni)
 │   ├── api.php                # Endpoint REST API JSON untuk konsumsi klien
 │   └── index.php              # Bootstrap: routing request ke Controller
+│
+├── laravel/                   # Enterprise Fullstack Monolith (Week 9: Laravel 11 CRUD + ORM)
+│   ├── app/
+│   │   ├── Http/Controllers/
+│   │   │   └── MenuController.php   # Controller dengan method index() & eager loading
+│   │   └── Models/
+│   │       ├── Category.php         # Model Category dengan relasi hasMany
+│   │       └── Menu.php             # Model Menu dengan relasi belongsTo & Accessor
+│   ├── database/
+│   │   ├── migrations/              # Migrasi tabel categories dan menus (Foreign Key)
+│   │   └── seeders/                 # Database seeders memuat 30 master menu
+│   ├── resources/views/
+│   │   ├── layouts/app.blade.php    # Master layout Blade dengan Tailwind CSS
+│   │   └── menu/index.blade.php     # Katalog menu responsif, filter, & search
+│   ├── routes/
+│   │   └── web.php                  # Web route '/' mengarah ke MenuController@index
+│   └── .env                         # Konfigurasi koneksi MySQL (db_cafe_menu)
 │
 ├── material/                  # Materi dan panduan perkuliahan
 ├── .gitignore                 # Filter berkas lingkungan dan editor
@@ -600,6 +625,158 @@ $objectMenu = array_map(function (array $item): Menu {
 
 ---
 
+## Week 9: Laravel CRUD & Eloquent ORM
+
+Pekan ke-9 menandai lompatan arsitektur dari MVC manual (*under-the-hood*) menuju framework standar industri global: **Laravel 11**. Fokus utama pekan ini adalah membangun fondasi aplikasi web monolit modern menggunakan teknik *Object-Relational Mapping* (Eloquent ORM), skema basis data relasional multi-tabel via migrasi, pengontrolan request terpusat (*Controller*), serta rendering antarmuka berbasis template engine *Blade*.
+
+```mermaid
+flowchart TD
+    Browser([Browser Klien]) -->|1. HTTP GET /?kategori=minuman&search=kopi| Route[routes/web.php]
+    Route -->|2. Dispatch Request| Controller[MenuController@index]
+    Controller -->|3. Eloquent Query with eager loading| Model[App\Models\Menu & Category]
+    Model -->|4. SQL Query via PDO| DB[(MySQL: db_cafe_menu)]
+    DB -->|5. Result Set Relasional| Model
+    Model -->|6. Eloquent Collection + Model Instances| Controller
+    Controller -->|7. Injeksi Data ke View| Blade[resources/views/menu/index.blade.php]
+    Blade -->|8. Kompilasi HTML Responsif| Browser
+```
+
+### 7 Capaian Implementasi Week 9
+
+#### Task 01: Instalasi & Fondasi Framework Laravel
+Inisialisasi proyek Laravel 11 murni di dalam direktori `laravel/` menggunakan Composer. Proyek ini mengadopsi standar PHP 8.3 dengan dependensi vendor terkelola secara otomatis, arsitektur konfigurasi modern tanpa overhead boilerplate lawas, dan isolasi lingkungan pengembangan yang bersih.
+
+#### Task 02: Konfigurasi Basis Data Relasional (.env)
+Menghubungkan aplikasi Laravel ke mesin basis data MySQL server lokal (`db_cafe_menu`) melalui file konfigurasi lingkungan `.env`:
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_cafe_menu
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Koneksi ini menggantikan penyimpanan data statis array PHP/JSON sebelumnya dengan basis data relasional ACID-compliant.
+
+#### Task 03: Migrasi Skema Multi-Tabel (Database Migrations)
+Merancang skema basis data relasional multi-tabel yang ternormalisasi (1:N) dengan integritas referensial:
+- Tabel `categories`: Menyimpan data kategori menu secara dinamis (`id`, `nama_kategori`, `slug`, `timestamps`).
+- Tabel `menus`: Menyimpan entitas produk kuliner dengan kunci asing `category_id` yang terikat (*constrained*) ke tabel `categories` dengan aturan penghapusan berantai (*cascade on delete*).
+
+```php
+Schema::create('categories', function (Blueprint $table) {
+    $table->id();
+    $table->string('nama_kategori');
+    $table->string('slug')->unique();
+    $table->timestamps();
+});
+
+Schema::create('menus', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+    $table->string('nama');
+    $table->unsignedInteger('harga');
+    $table->string('gambar')->nullable();
+    $table->string('status')->default('Tersedia');
+    $table->text('deskripsi')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Task 04: Pemodelan Domain & Relasi Eloquent (Models)
+Mengimplementasikan class model Eloquent aktif:
+- `App\Models\Category`: Mendefinisikan relasi `hasMany(Menu::class)` untuk merepresentasikan satu kategori memiliki banyak menu.
+- `App\Models\Menu`: Mendefinisikan relasi `belongsTo(Category::class)` untuk merepresentasikan relasi kepemilikan kategori, properti `$fillable`, serta Accessor `getHargaFormattedAttribute()` untuk memformat angka nominal menjadi mata uang Rupiah secara elegan.
+
+```php
+class Category extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['nama_kategori', 'slug'];
+
+    public function menus(): HasMany
+    {
+        return $this->hasMany(Menu::class);
+    }
+}
+```
+
+```php
+class Menu extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'category_id', 'nama', 'harga', 'gambar', 'status', 'deskripsi'
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getHargaFormattedAttribute(): string
+    {
+        return 'Rp ' . number_format($this->harga, 0, ',', '.');
+    }
+}
+```
+
+#### Task 05: Implementasi Controller (Method index)
+Membangun `App\Http\Controllers\MenuController` dengan method `index(Request $request)` yang bertanggung jawab mengoordinasikan penerimaan filter HTTP (kategori & kata kunci pencarian), eksekusi kueri ORM dengan teknik *eager loading* (`with('category')`) guna mencegah masalah kueri N+1, dan meneruskan koleksi data ke lapisan View.
+
+```php
+class MenuController extends Controller
+{
+    public function index(Request $request): View
+    {
+        $categories = Category::all();
+
+        $query = Menu::with('category');
+
+        if ($request->filled('kategori') && $request->kategori !== 'all') {
+            $query->whereHas('category', function ($builder) use ($request) {
+                $builder->where('slug', $request->kategori);
+            });
+        }
+
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->where(function ($builder) use ($keyword) {
+                $builder->where('nama', 'like', "%{$keyword}%")
+                    ->orWhere('deskripsi', 'like', "%{$keyword}%");
+            });
+        }
+
+        $menus = $query->orderBy('id', 'asc')->get();
+
+        return view('menu.index', [
+            'categories' => $categories,
+            'menus' => $menus,
+            'activeCategory' => $request->get('kategori', 'all'),
+            'searchKeyword' => $request->get('search', ''),
+        ]);
+    }
+}
+```
+
+#### Task 06: Template Antarmuka Blade Responsif (Views)
+Membangun hierarki tampilan menggunakan template engine Blade yang mempertahankan konsistensi visual 100% dengan rancangan Week 2 s/d Week 7:
+- `resources/views/layouts/app.blade.php`: Master layout dengan warna latar otentik (`#D5B99F` radial gradient), palet warna kafe (`primary-light`, `dark`, `gray-500`, `gray-800`), dan Google Fonts (*Playfair Display* & *Plus Jakarta Sans*).
+- `resources/views/menu/index.blade.php`: Tampilan katalog menu interaktif dengan header 'Menu', pencarian ganda (filter instan DOM + fallback kueri server-side), filter kategori horizontal dengan garis bawah aktif, grid kartu menu kaca semi-transparan (`bg-white/30`), status badge (`Best Seller`, `Promo`, `Habis`), floating cart summary pill interaktif, serta komponen *empty state*.
+
+#### Task 07: Routing & Endpoint Kueri Dinamis (Routes)
+Mendaftarkan rute aplikasi di `routes/web.php` yang mengarahkan path URL root `/` ke `MenuController@index` dengan nama rute `menu.index`:
+```php
+use App\Http\Controllers\MenuController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', [MenuController::class, 'index'])->name('menu.index');
+```
+
+---
+
 ## Skema Data & Kontrak API
 
 Berkas data tiruan dan master data PHP mengikuti standar representasi entitas berikut:
@@ -687,6 +864,18 @@ Buka peramban pada alamat: `http://localhost:8000/frontend/index.html`
 #### 3. Menguji Endpoint REST API
 Untuk memeriksa keluaran JSON dari backend PHP:
 Buka peramban pada alamat: `http://localhost:8000/backend/api.php` atau `http://localhost:8000/backend/api.php?kategori=Makanan`
+
+#### 4. Week 9 — Laravel 11 CRUD & Eloquent ORM
+Pastikan layanan MySQL aktif pada port 3306 dan basis data `db_cafe_menu` telah dibuat. Masuk ke direktori `laravel/` lalu jalankan server artisan:
+```bash
+cd laravel
+php artisan migrate:fresh --seed
+php artisan serve
+```
+Buka peramban pada:
+- `http://127.0.0.1:8000/` — Katalog utama menu Cafe QR (eager loading relasi kategori).
+- `http://127.0.0.1:8000/?kategori=minuman` — Filter kategori via Eloquent query.
+- `http://127.0.0.1:8000/?search=kopi` — Pencarian keyword nama/deskripsi.
 
 ---
 
