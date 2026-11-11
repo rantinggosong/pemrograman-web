@@ -278,56 +278,62 @@ Ketika pengguna membuka alamat root `http://127.0.0.1:8000/`, Laravel secara oto
 
 ## 5. CARA PALING MUDAH MENJALANKAN PROJECT (PANDUAN XAMPP & LARAGON)
 
-Ikuti 5 langkah simpel ini jika ingin menjalankan project di laptop sendiri atau di komputer lain:
+### ⚡ CARA SUPER INSTAN: CUKUP 1 KALI DOUBLE-CLICK FILE `run.bat`! ⭐
 
-### Opsi A: Menjalankan Menggunakan XAMPP (Cara Paling Cepat & Mudah)
+Untuk mempermudah seluruh anggota tim agar tidak perlu mengetik perintah terminal satu per satu atau membuka phpMyAdmin secara manual, kami telah menyediakan skrip otomatisasi satu-klik bernama **`run.bat`** (tersedia di root project maupun di dalam folder `laravel/run.bat`).
 
-1. **Jalankan Apache & MySQL di XAMPP:**
-   - Buka **XAMPP Control Panel**.
-   - Klik tombol **Start** pada **Apache** dan **MySQL** (keduanya menjadi hijau).
-
-2. **Buat Database di phpMyAdmin:**
-   - Buka browser (Chrome), buka: `http://localhost/phpmyadmin`
-   - Klik menu **Databases** (atau **Basis data**).
-   - Di kolom nama database, ketik: `db_cafe_menu` lalu klik tombol **Create**.
-
-3. **Buka Terminal Melalui Tombol "Shell" XAMPP (Tips Anti-Ribet):**
-   - Di XAMPP Control Panel, klik tombol **"Shell"** di sebelah kanan.
-   - *(Keuntungan: Terminal bawaan XAMPP ini sudah otomatis mengenali perintah `php`, `composer`, dan `artisan` tanpa perlu repot mengatur PATH lingkungan Windows!)*
-   - Di jendela terminal yang muncul, masuk ke folder `laravel`:
-     ```bash
-     cd "d:\perkuliahan_semester_5\tugas pemrograman web\laravel"
-     ```
-
-4. **Jalankan Migrasi & Seeder Database (Cukup 1 Baris Perintah):**
-   ```bash
-   php artisan migrate:fresh --seed
-   ```
-   *Tabel `categories`, `menus`, beserta 30 menu kuliner real langsung otomatis terisi ke MySQL XAMPP.*
-
-5. **Jalankan Server Lokal:**
-   ```bash
-   php artisan serve
-   ```
-   Buka browser di: **`http://127.0.0.1:8000`**  
-   *(Web Kape QR langsung menyala dan siap didemokan!)*
+#### Langkah Menjalankan:
+1. **Pastikan Layanan Basis Data Aktif:** Buka XAMPP lalu klik **Start** pada Apache & MySQL (atau klik **Start All** jika menggunakan Laragon).
+2. **Jalankan File:** Klik 2x (*double-click*) pada berkas **`run.bat`**.
+3. **Selesai!** Browser akan otomatis terbuka dan langsung menampilkan antarmuka web.
 
 ---
 
-### Opsi B: Menjalankan Menggunakan Laragon
+### 🔍 Bedah Teknis: Apa Saja yang Dilakukan oleh `run.bat` Secara Otomatis?
 
-1. Buka aplikasi **Laragon**, lalu klik tombol **Start All**.
-2. Buka terminal (klik kanan di Laragon $\rightarrow$ *Laragon* $\rightarrow$ *Terminal* atau buka PowerShell).
-3. Masuk ke direktori `laravel`:
+Skrip `run.bat` dirancang secara cerdas untuk mengeksekusi 6 tahapan penting di balik layar:
+
+1. **Auto-Detection Direktori:**  
+   Skrip otomatis mendeteksi apakah ia dipanggil dari folder utama (`tugas pemrograman web/`) atau dari subfolder (`laravel/`), lalu memosisikan *working directory* ke path aplikasi yang tepat tanpa error.
+2. **Auto-Detection Lingkungan PHP & MySQL (Multi-Environment):**  
+   Skrip memeriksa ketersediaan `php` dan `mysql` di sistem. Jika komputer baru belum mengatur *Environment Variables* (PATH), skrip otomatis mencari dan menggunakan binary PHP/MySQL dari instalasi default XAMPP (`C:\xampp\php;C:\xampp\mysql\bin`) maupun Laragon (`C:\laragon\bin\...`).
+3. **Auto-Provisioning Berkas `.env` & Application Key:**  
+   Jika berkas `.env` belum ada (misal setelah git clone), skrip otomatis menyalin `.env.example` menjadi `.env` dan membangkitkan `APP_KEY` baru menggunakan `php artisan key:generate`.
+4. **Auto-Creation Basis Data MySQL Tanpa phpMyAdmin:**  
+   Skrip mengeksekusi perintah SQL `CREATE DATABASE IF NOT EXISTS db_cafe_menu;` secara *headless* di balik layar. Pengguna tidak perlu lagi repot-repot membuka browser ke phpMyAdmin untuk membuat database.
+5. **Auto-Migration & Database Seeding:**  
+   Skrip mengeksekusi `php artisan migrate:fresh --seed --force` untuk membangun skema tabel relasional (`categories` dan `menus`) sekaligus mengimpor 30 master data menu kuliner real.
+6. **Auto-Launch Browser & Web Server:**  
+   Skrip membuka browser bawaan sistem (Chrome/Edge) ke alamat `http://127.0.0.1:8000`, kemudian langsung menyalakan server lokal via `php artisan serve`.
+
+> **Catatan Presentasi:** Jendela terminal hitam (*Command Prompt*) yang muncul setelah mengklik `run.bat` jangan ditutup selama Anda sedang mendemokan website di proyektor, karena jendela tersebut berfungsi sebagai server web yang sedang aktif melayani request.
+
+---
+
+### Cara Alternatif (Manual via Terminal Sendiri)
+
+Jika ada anggota tim yang ingin menjalankan perintah terminal secara manual:
+
+#### Opsi A: Menjalankan Manual di XAMPP
+1. Buka **XAMPP Control Panel**, klik **Start** pada Apache dan MySQL.
+2. Klik tombol **"Shell"** di sebelah kanan XAMPP Control Panel.
+3. Masuk ke folder proyek dan jalankan:
    ```bash
    cd "d:\perkuliahan_semester_5\tugas pemrograman web\laravel"
-   ```
-4. Jalankan perintah migrasi dan server:
-   ```bash
    php artisan migrate:fresh --seed
    php artisan serve
    ```
-5. Buka peramban di: **`http://127.0.0.1:8000`**.
+4. Buka peramban pada: `http://127.0.0.1:8000`.
+
+#### Opsi B: Menjalankan Manual di Laragon
+1. Buka **Laragon**, klik **Start All**.
+2. Buka terminal Laragon, masuk ke folder `laravel`:
+   ```bash
+   cd "d:\perkuliahan_semester_5\tugas pemrograman web\laravel"
+   php artisan migrate:fresh --seed
+   php artisan serve
+   ```
+3. Buka peramban pada: `http://127.0.0.1:8000`.
 
 ---
 

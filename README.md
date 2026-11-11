@@ -866,7 +866,12 @@ Untuk memeriksa keluaran JSON dari backend PHP:
 Buka peramban pada alamat: `http://localhost:8000/backend/api.php` atau `http://localhost:8000/backend/api.php?kategori=Makanan`
 
 #### 4. Week 9 — Laravel 11 CRUD & Eloquent ORM
-Pastikan layanan MySQL aktif pada port 3306 dan basis data `db_cafe_menu` telah dibuat. Masuk ke direktori `laravel/` lalu jalankan server artisan:
+
+**Cara Instan (1-Click):**
+Cukup klik ganda (*double-click*) berkas **`run.bat`** di root folder. Skrip otomatis menyiapkan database MySQL, menjalankan migrasi & seeder, serta membuka browser ke `http://127.0.0.1:8000`.
+
+**Cara Manual:**
+Pastikan layanan MySQL aktif pada port 3306. Masuk ke direktori `laravel/` lalu jalankan:
 ```bash
 cd laravel
 php artisan migrate:fresh --seed
