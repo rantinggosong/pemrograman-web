@@ -7,7 +7,7 @@ Dokumen ini disusun sebagai panduan resmi anggota tim pengembang **Kape QR** unt
 ## DAFTAR ISI
 
 1. [Konteks Tugas & Latar Belakang Arsitektur](#1-konteks-tugas--latar-belakang-arsitektur)
-2. [Checklist 7 Instruksi Dosen (Bocoran Week 9)](#2-checklist-7-instruksi-dosen-bocoran-week-9)
+2. [Rangkuman Jelas: Apa Saja yang Dilakukan dari 7 Permintaan Dosen](#2-rangkuman-jelas-apa-saja-yang-dilakukan-dari-7-permintaan-dosen)
 3. [Struktur Folder & Standar Clean Architecture](#3-struktur-folder--standar-clean-architecture)
 4. [Bedah Kode Teknis (7 Poin Implementasi)](#4-bedah-kode-teknis-7-poin-implementasi)
    - [Poin 1: Instalasi Laravel](#poin-1-instalasi-laravel)
@@ -17,9 +17,9 @@ Dokumen ini disusun sebagai panduan resmi anggota tim pengembang **Kape QR** unt
    - [Poin 5: Controller & Query Orchestration](#poin-5-controller--query-orchestration)
    - [Poin 6: Antarmuka Blade Responsif (Views)](#poin-6-antarmuka-blade-responsif-views)
    - [Poin 7: Routing Web (routes/web.php)](#poin-7-routing-web-routeswebphp)
-5. [Skrip & Panduan Demo Presentasi di Proyektor](#5-skrip--panduan-demo-presentasi-di-proyektor)
-6. [Antisipasi Pertanyaan Dosen & Kunci Jawaban](#6-antisipasi-pertanyaan-dosen--kunci-jawaban)
-7. [Panduan Menjalankan Project di Laptop Anggota](#7-panduan-menjalankan-project-di-laptop-anggota)
+5. [Cara Paling Mudah Menjalankan Project (Panduan XAMPP & Laragon)](#5-cara-paling-mudah-menjalankan-project-panduan-xampp--laragon)
+6. [Skrip & Panduan Demo Presentasi di Proyektor](#6-skrip--panduan-demo-presentasi-di-proyektor)
+7. [Antisipasi Pertanyaan Dosen & Kunci Jawaban](#7-antisipasi-pertanyaan-dosen--kunci-jawaban)
 
 ---
 
@@ -32,19 +32,19 @@ Dokumen ini disusun sebagai panduan resmi anggota tim pengembang **Kape QR** unt
 
 ---
 
-## 2. CHECKLIST 7 INSTRUKSI DOSEN (BOCORAN WEEK 9)
+## 2. RANGKUMAN JELAS: APA SAJA YANG DILAKUKAN DARI 7 PERMINTAAN DOSEN
 
-Berikut adalah 7 poin instruksi yang tertulis pada modul/papan tulis perkuliahan dan status penyelesaiannya dalam proyek kita:
+Berikut adalah rincian lengkap mengenai apa yang diminta dosen (berdasarkan catatan papan tulis perkuliahan) dan apa yang telah kita kerjakan secara nyata:
 
-| No | Instruksi Perkuliahan | Status | Lokasi Berkas / Implementasi |
-| :---: | :--- | :---: | :--- |
-| **1** | **Instalasi Laravel** | Selesai | Direktori `laravel/` (Laravel 11 + PHP 8.3) |
-| **2** | **Setting database (`.env`)** | Selesai | `laravel/.env` terhubung ke MySQL `db_cafe_menu` |
-| **3** | **Buat table di database $\rightarrow$ migrations sejumlah table** | Selesai | Tabel `categories` & `menus` dengan relasi Foreign Key |
-| **4** | **Buat model untuk masing-masing table** | Selesai | `App\Models\Category` & `App\Models\Menu` (relasi 1:N) |
-| **5** | **Buat controller (method `index`)** | Selesai | `App\Http\Controllers\MenuController@index` |
-| **6** | **Buat views (`index`)** | Selesai | `resources/views/layouts/app.blade.php` & `menu/index.blade.php` |
-| **7** | **Buat route (`index`)** | Selesai | `routes/web.php` mengarahkan root `/` ke `MenuController@index` |
+| No | Permintaan Dosen | Apa yang Kita Kerjakan? | Mengapa Dibuat Begitu? (Tujuan Rekayasa) |
+| :---: | :--- | :--- | :--- |
+| **1** | **Instalasi Laravel** | Menginisialisasi proyek Laravel 11 murni di folder `laravel/` menggunakan Composer & PHP 8.3, lalu membersihkan seluruh file template/boilerplate yang tidak digunakan (seperti `AGENTS.md`, `package.json`, Vite, dll). | Menghasilkan struktur aplikasi monolit standar industri yang ramping (*lean*), fungsional 100%, dan bebas dari file sampah (*zero dead-weight*). |
+| **2** | **Setting Database (`.env`)** | Mengonfigurasi variabel `DB_CONNECTION=mysql`, `DB_HOST=127.0.0.1`, `DB_PORT=3306`, dan `DB_DATABASE=db_cafe_menu` pada berkas `laravel/.env`. | Memisahkan kredensial database dari kode program agar aman (*security best practice*) dan kompatibel langsung dengan XAMPP/Laragon lokal. |
+| **3** | **Buat Table di Database $\rightarrow$ Migrations Sejumlah Table** | Merancang 2 berkas migrasi relasional: tabel `categories` (menyimpan kategori) dan tabel `menus` (menyimpan produk) yang terhubung via Foreign Key `category_id` dengan aturan `cascadeOnDelete`. Kita juga menyertakan Seeder berisi 30 menu kuliner real. | Menjamin integritas referensial data (1 kategori memiliki banyak menu) dan menyediakan version-control untuk skema database tanpa perlu create table manual. |
+| **4** | **Buat Model untuk Masing-Masing Table** | Membuat class Eloquent Model `App\Models\Category` dengan relasi `hasMany(Menu::class)` dan `App\Models\Menu` dengan relasi `belongsTo(Category::class)` serta Accessor format Rupiah `getHargaFormattedAttribute()`. | Menerapkan paradigma Object-Relational Mapping (ORM) murni: database diakses sebagai Objek PHP berelasi, bukan query SQL string mentah. Dilengkapi proteksi `$fillable`. |
+| **5** | **Buat Controller (Method `index`)** | Membuat `App\Http\Controllers\MenuController` dengan method `index(Request $request)` yang mengorkestrasi penarikan data kategori, query produk dengan *Eager Loading* `Menu::with('category')`, filter kategori, dan pencarian kata kunci. | Mencegah masalah performa *N+1 Query Problem*, memusatkan logika pengolahan data HTTP, dan mengirimkan data bersih siap pakai ke View. |
+| **6** | **Buat Views (`index`)** | Membangun master layout `resources/views/layouts/app.blade.php` dan tampilan katalog `resources/views/menu/index.blade.php` menggunakan template engine Blade dengan mempertahankan 100% konsistensi UI/UX dari Week 2 s/d Week 7 (warna `#D5B99F`, Playfair Display, filter kategori, kartu menu, cart pill, empty state). | Menjaga konsistensi identitas visual kafe, layout inheritance yang rapi (*DRY Principle*), proteksi otomatis dari celah XSS via Blade escaping, dan pengalaman pengguna yang interaktif. |
+| **7** | **Buat Route (`index`)** | Mendaftarkan route HTTP GET di `routes/web.php` yang mengarahkan path root `/` ke `MenuController@index` dengan penamaan route `menu.index`. | Menyediakan endpoint akses utama aplikasi yang terdefinisi secara deklaratif dan mudah dipanggil di seluruh view menggunakan helper `route('menu.index')`. |
 
 ---
 
@@ -61,10 +61,16 @@ laravel/
 ├── app/
 │   ├── Http/
 │   │   └── Controllers/
+│   │       ├── Controller.php         <- Base Controller abstrak
 │   │       └── MenuController.php     <- Poin 5: Eager loading, filter, & search
-│   └── Models/
-│       ├── Category.php               <- Poin 4: Relasi hasMany(Menu::class)
-│       └── Menu.php                   <- Poin 4: Relasi belongsTo(Category::class) & Accessor
+│   ├── Models/
+│   │   ├── Category.php               <- Poin 4: Relasi hasMany(Menu::class)
+│   │   └── Menu.php                   <- Poin 4: Relasi belongsTo(Category::class) & Accessor
+│   └── Providers/
+│       └── AppServiceProvider.php     <- Service provider aplikasi
+├── bootstrap/
+│   └── app.php                        <- Inisialisasi framework & routing Laravel 11
+├── config/                            <- Konfigurasi framework (database, app, session, dll)
 ├── database/
 │   ├── migrations/
 │   │   ├── ..._create_categories_table.php  <- Poin 3: Skema tabel kategori
@@ -74,7 +80,9 @@ laravel/
 │       ├── MenuSeeder.php             <- Seeder 30 data menu kuliner real
 │       └── DatabaseSeeder.php         <- Seeder runner utama
 ├── public/
-│   └── asset/                         <- Aset gambar kuliner (24 file foto)
+│   ├── asset/                         <- Aset gambar kuliner (24 file foto)
+│   ├── .htaccess & favicon.ico
+│   └── index.php                      <- Entry point HTTP server
 ├── resources/
 │   └── views/
 │       ├── layouts/
@@ -82,8 +90,16 @@ laravel/
 │       └── menu/
 │           └── index.blade.php        <- Poin 6: Katalog menu dinamis + filter
 ├── routes/
+│   ├── console.php                    <- Console commands
 │   └── web.php                        <- Poin 7: Route::get('/', [MenuController::class, 'index'])
-└── .env                               <- Poin 2: Konfigurasi MySQL
+├── tests/
+│   ├── TestCase.php
+│   ├── Feature/ExampleTest.php        <- Feature test HTTP response & database
+│   └── Unit/MenuTest.php              <- Unit test logika model Menu
+├── .env & .env.example                <- Poin 2: Konfigurasi MySQL
+├── artisan                            <- CLI runner Laravel
+├── composer.json & lock               <- Dependensi backend murni
+└── README.md                          <- Dokumentasi resmi Cafe QR Menu
 ```
 
 ---
@@ -91,7 +107,7 @@ laravel/
 ## 4. BEDAH KODE TEKNIS (7 POIN IMPLEMENTASI)
 
 ### Poin 1: Instalasi Laravel
-Laravel 11 diinisialisasi menggunakan PHP 8.3 dan Composer dengan arsitektur modern (*lean skeleton*). Tidak ada dependensi yang usang, dan autoloading class diatur sepenuhnya melalui PSR-4.
+Laravel 11 diinisialisasi menggunakan PHP 8.3 dan Composer dengan arsitektur modern (*lean skeleton*). Seluruh dependensi Node/Vite dan komentar boilerplate telah dibersihkan sehingga repositori berbobot ringan dan fungsional.
 
 ### Poin 2: Konfigurasi Basis Data (.env)
 Konfigurasi database diatur pada file `laravel/.env`:
@@ -260,12 +276,67 @@ Ketika pengguna membuka alamat root `http://127.0.0.1:8000/`, Laravel secara oto
 
 ---
 
-## 5. SKRIP & PANDUAN DEMO PRESENTASI DI PROYEKTOR
+## 5. CARA PALING MUDAH MENJALANKAN PROJECT (PANDUAN XAMPP & LARAGON)
+
+Ikuti 5 langkah simpel ini jika ingin menjalankan project di laptop sendiri atau di komputer lain:
+
+### Opsi A: Menjalankan Menggunakan XAMPP (Cara Paling Cepat & Mudah)
+
+1. **Jalankan Apache & MySQL di XAMPP:**
+   - Buka **XAMPP Control Panel**.
+   - Klik tombol **Start** pada **Apache** dan **MySQL** (keduanya menjadi hijau).
+
+2. **Buat Database di phpMyAdmin:**
+   - Buka browser (Chrome), buka: `http://localhost/phpmyadmin`
+   - Klik menu **Databases** (atau **Basis data**).
+   - Di kolom nama database, ketik: `db_cafe_menu` lalu klik tombol **Create**.
+
+3. **Buka Terminal Melalui Tombol "Shell" XAMPP (Tips Anti-Ribet):**
+   - Di XAMPP Control Panel, klik tombol **"Shell"** di sebelah kanan.
+   - *(Keuntungan: Terminal bawaan XAMPP ini sudah otomatis mengenali perintah `php`, `composer`, dan `artisan` tanpa perlu repot mengatur PATH lingkungan Windows!)*
+   - Di jendela terminal yang muncul, masuk ke folder `laravel`:
+     ```bash
+     cd "d:\perkuliahan_semester_5\tugas pemrograman web\laravel"
+     ```
+
+4. **Jalankan Migrasi & Seeder Database (Cukup 1 Baris Perintah):**
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+   *Tabel `categories`, `menus`, beserta 30 menu kuliner real langsung otomatis terisi ke MySQL XAMPP.*
+
+5. **Jalankan Server Lokal:**
+   ```bash
+   php artisan serve
+   ```
+   Buka browser di: **`http://127.0.0.1:8000`**  
+   *(Web Kape QR langsung menyala dan siap didemokan!)*
+
+---
+
+### Opsi B: Menjalankan Menggunakan Laragon
+
+1. Buka aplikasi **Laragon**, lalu klik tombol **Start All**.
+2. Buka terminal (klik kanan di Laragon $\rightarrow$ *Laragon* $\rightarrow$ *Terminal* atau buka PowerShell).
+3. Masuk ke direktori `laravel`:
+   ```bash
+   cd "d:\perkuliahan_semester_5\tugas pemrograman web\laravel"
+   ```
+4. Jalankan perintah migrasi dan server:
+   ```bash
+   php artisan migrate:fresh --seed
+   php artisan serve
+   ```
+5. Buka peramban di: **`http://127.0.0.1:8000`**.
+
+---
+
+## 6. SKRIP & PANDUAN DEMO PRESENTASI DI PROYEKTOR
 
 Gunakan panduan 4 langkah berikut saat maju mempresentasikan tugas di depan kelas:
 
 ### Langkah 1: Membuka Visual Studio Code
-Buka folder `laravel/` di VS Code.
+Buka folder `laravel/` di VS Code (`File -> Open Folder -> laravel`).
 > **Kalimat Presenter:**  
 > *"Selamat pagi/siang Bapak/Ibu dosen dan rekan-rekan sekalian. Pada pertemuan ke-9 ini, tim kami mengimplementasikan migrasi sistem Cafe QR Menu dari arsitektur MVC manual ke framework Laravel 11. Di sini kami telah memenuhi seluruh 7 instruksi perkuliahan, mulai dari instalasi, migrasi multi-tabel, pemodelan Eloquent ORM, controller, views Blade, hingga routing."*
 
@@ -284,47 +355,16 @@ Buka browser pada `http://127.0.0.1:8000/`.
 > **Kalimat Presenter:**  
 > *"Berikut adalah antarmuka katalog menu yang kami bangun menggunakan template engine Blade dan Tailwind CSS. Seluruh 30 menu kuliner dirender secara dinamis dari database MySQL.*  
 > *(Sambil klik tombol kategori Minuman / Makanan)*  
-> *Ketika kita memilih kategori atau mengetik kata kunci pencarian, Controller secara cerdas memfilter kueri Eloquent dan memperbarui tampilan secara instan."*
+> *Ketika kita memilih kategori atau mengetik kata kunci pencarian, Controller secara cerdas memfilter kueri Eloquent dan memperbarui tampilan secara instan. Kami juga mempertahankan interaktivitas tombol Order Now dan floating summary pill yang menghitung pesanan secara langsung."*
 
 ---
 
-## 6. ANTISIPASI PERTANYAAN DOSEN & KUNCI JAWABAN
+## 7. ANTISIPASI PERTANYAAN DOSEN & KUNCI JAWABAN
 
 | Pertanyaan Dosen | Kunci Jawaban Lengkap & Benar |
 | :--- | :--- |
 | **Q1: "Mengapa kalian memakai `with('category')` di Controller, kenapa tidak langsung `Menu::all()`?"** | *"Jika kita memakai `Menu::all()` lalu di view memanggil `$menu->category->nama_kategori`, Laravel akan melakukan 1 query SQL baru untuk setiap kartu menu. Untuk 30 menu, itu berarti 31 query (N+1 Query Problem). Dengan `with('category')`, Laravel melakukan Eager Loading sehingga hanya mengeksekusi 2 query efisien di awal."* |
-| **Q2: "Apa fungsi `$fillable` pada Model `Menu` dan `Category`?"** | *"`$fillable` adalah whitelist atribut yang diizinkan untuk diisi secara massal (Mass Assignment). Ini adalah fitur keamanan penting di Laravel untuk mencegah serangan Mass Assignment Vulnerability, di mana pengguna berbahaya mencoba menyuntikkan kolom terlarang (seperti ID atau role admin)."\* |
+| **Q2: "Apa fungsi `$fillable` pada Model `Menu` dan `Category`?"** | *"`$fillable` adalah whitelist atribut yang diizinkan untuk diisi secara massal (Mass Assignment). Ini adalah fitur keamanan penting di Laravel untuk mencegah serangan Mass Assignment Vulnerability, di mana pengguna berbahaya mencoba menyuntikkan kolom terlarang (seperti ID atau role admin)."* |
 | **Q3: "Apa perbedaan render tampilan di Week 7 (MVC Native) dan Week 9 (Laravel)?"** | *"Di Week 7, kita merender HTML menggunakan PHP tag `<?= $menu->renderKartu(); ?>` secara manual. Di Week 9, kita menggunakan template engine Blade (`@extends`, `@section`, `@forelse`) yang otomatis melakukan escaping XSS, mendukung layout inheritance, dan memisahkan struktur tampilan secara jauh lebih bersih."* |
 | **Q4: "Bagaimana cara kerja Accessor `harga_formatted`?"** | *"Accessor adalah fitur Eloquent untuk mengubah nilai atribut saat diakses. Dengan method `getHargaFormattedAttribute()`, kita tidak perlu memformat mata uang secara manual di view. Cukup panggil `$menu->harga_formatted` dan sistem otomatis menghasilkan format `Rp 25.000`."* |
-
----
-
-## 7. PANDUAN MENJALANKAN PROJECT DI LAPTOP ANGGOTA
-
-Bagi setiap anggota tim yang ingin menjalankan proyek ini di laptopnya masing-masing:
-
-1. **Pastikan Laragon atau XAMPP aktif** (layanan Apache & MySQL dalam kondisi Running).
-2. **Buka Terminal di direktori `laravel`:**
-   ```bash
-   cd laravel
-   ```
-3. **Pastikan dependensi vendor terpasang (jika clone dari git):**
-   ```bash
-   composer install
-   ```
-4. **Salin file konfigurasi lingkungan (jika belum ada):**
-   ```bash
-   copy .env.example .env
-   php artisan key:generate
-   ```
-5. **Jalankan migrasi dan seeder database:**
-   ```bash
-   php artisan migrate:fresh --seed
-   ```
-6. **Jalankan server lokal:**
-   ```bash
-   php artisan serve
-   ```
-7. **Buka peramban:**
-   Akses `http://127.0.0.1:8000` di Google Chrome.
-
+| **Q5: "Kenapa skema database kalian hanya 2 tabel dan tidak ada tabel `users` atau `cache`?"** | *"Karena kami mematuhi prinsip Clean Architecture. Berdasarkan instruksi tugas pekan 9 yang berfokus pada katalog menu dan relasi multi-tabel, kami merancang skema yang tepat sasaran: `categories` dan `menus`. Tabel boilerplate yang tidak terpakai dibersihkan agar database murni merepresentasikan domain bisnis kafe."* |
